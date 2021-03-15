@@ -20,7 +20,7 @@ class DatasetLoader:
 
                 image = cv2.imread(image_path)
                 label = image_path.split("/")[-2]
-                if self.preprocessors is not None:
+                if self.preprocessors:
                     for preprocessor in self.preprocessors:
                         preprocessor.preprocess(image)
                 data.append(image)
