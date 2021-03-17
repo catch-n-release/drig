@@ -22,7 +22,7 @@ class DatasetLoader:
                 label = image_path.split("/")[-2]
                 if self.preprocessors:
                     for preprocessor in self.preprocessors:
-                        preprocessor.preprocess(image)
+                        image = preprocessor.preprocess(image)
                 data.append(image)
                 labels.append(label)
 
