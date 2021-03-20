@@ -143,3 +143,6 @@ datasets/
 
 #Binary File
 .DS_Store
+
+#Model Files
+models/

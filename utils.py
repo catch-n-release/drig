@@ -35,3 +35,13 @@ def plot_training_metrics(epochs, model_training_history):
         plt.show()
     except Exception as e:
         raise e
+
+
+def display_prediction(image_path, prediction, class_labels):
+    try:
+        return display_image(
+            cv2.putText(cv2.imread(image_path),
+                        f"Label: {class_labels[prediction[0]]}", (10, 30),
+                        cv2.FONT_HERSHEY_COMPLEX, 0.7, (0, 255, 0), 2))
+    except Exception as e:
+        raise e
