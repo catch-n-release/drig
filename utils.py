@@ -45,3 +45,24 @@ def display_prediction(image_path, prediction, class_labels):
                         cv2.FONT_HERSHEY_COMPLEX, 0.7, (0, 255, 0), 2))
     except Exception as e:
         raise e
+
+
+def get_ranked_accuracies(predictions, labels):
+    try:
+        rank_one_accuracy = 0
+        rank_five_accuracy = 0
+
+        for prediction, label in zip(predictions, labels):
+
+            prediction = np.argsort(prediction)[::-1]
+
+            if label in prediction[:5]:
+                rank_five_accuracy += 1
+            if label == prediction[0]:
+                rank_one_accuracy += 1
+
+        rank_one_accuracy = float(rank_one_accuracy / len(labels))
+        rank_five_accuracy = float(rank_five_accuracy / len(labels))
+        return rank_one_accuracy, rank_five_accuracy
+    except Exception as e:
+        raise e
