@@ -2,6 +2,11 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from keras.layers.convolutional import Conv2D, MaxPooling2D
+from keras.layers.core import Activation, Flatten, Dense, Dropout
+from keras.layers.normalization import BatchNormalization
+from collections import defaultdict
+import visualkeras
 
 
 def display_image(image):
@@ -64,5 +69,22 @@ def get_ranked_accuracies(predictions, labels):
         rank_one_accuracy = float(rank_one_accuracy / len(labels))
         rank_five_accuracy = float(rank_five_accuracy / len(labels))
         return rank_one_accuracy * 100, rank_five_accuracy * 100
+    except Exception as e:
+        raise e
+
+
+def visualize_network(model):
+    try:
+        color_map = defaultdict(dict)
+        color_map[Conv2D]['fill'] = '#CA6F1E'
+        color_map[Activation]['fill'] = '#660000'
+        color_map[Dropout]['fill'] = '#212F3D'
+        color_map[MaxPooling2D]['fill'] = '#2471A3'
+        color_map[Dense]['fill'] = '#145A32'
+        color_map[Flatten]['fill'] = '#229954'
+        color_map[BatchNormalization]['fill'] = '#BDC3C7'
+        return visualkeras.layered_view(model,
+                                        color_map=color_map,
+                                        legend=True)
     except Exception as e:
         raise e
