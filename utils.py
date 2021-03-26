@@ -63,6 +63,6 @@ def get_ranked_accuracies(predictions, labels):
 
         rank_one_accuracy = float(rank_one_accuracy / len(labels))
         rank_five_accuracy = float(rank_five_accuracy / len(labels))
-        return rank_one_accuracy, rank_five_accuracy
+        return rank_one_accuracy * 100, rank_five_accuracy * 100
     except Exception as e:
         raise e
