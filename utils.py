@@ -7,6 +7,7 @@ from keras.layers.core import Activation, Flatten, Dense, Dropout
 from keras.layers.normalization import BatchNormalization
 from collections import defaultdict
 import visualkeras
+import random
 
 
 def display_image(image):
@@ -73,7 +74,7 @@ def get_ranked_accuracies(predictions, labels):
         raise e
 
 
-def visualize_network(model):
+def visualize_network(model, scale_xy=2):
     try:
         color_map = defaultdict(dict)
         color_map[Conv2D]['fill'] = '#CA6F1E'
@@ -85,6 +86,18 @@ def visualize_network(model):
         color_map[BatchNormalization]['fill'] = '#BDC3C7'
         return visualkeras.layered_view(model,
                                         color_map=color_map,
-                                        legend=True)
+                                        legend=True,
+                                        scale_xy=scale_xy)
+    except Exception as e:
+        raise e
+
+
+def display_data(image_paths):
+    try:
+        image_list = [
+            Image.open(image_path)
+            for image_path in random.sample(image_paths, 4)
+        ]
+        return visualkeras.utils.linear_layout(image_list)
     except Exception as e:
         raise e
