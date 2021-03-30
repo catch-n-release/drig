@@ -101,3 +101,15 @@ def display_data(image_paths):
         return visualkeras.utils.linear_layout(image_list)
     except Exception as e:
         raise e
+
+
+def draw_faces(image, faces):
+    try:
+        _ = [
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 1)
+            for x1, y1, x2, y2 in faces
+        ]
+
+        return image
+    except Exception as e:
+        raise e
