@@ -9,6 +9,7 @@ from collections import defaultdict
 import visualkeras
 import random
 import matplotlib
+import plotly.graph_objects as graph
 
 
 def display_image(image):
@@ -18,32 +19,39 @@ def display_image(image):
         raise e
 
 
-def plot_training_metrics(epochs, model_training_history, save_path=None):
+def plot_training_metrics(epochs,
+                          model_training_history,
+                          save_path=None,
+                          use_matplotlib=False):
     try:
-        if save_path:
-            matplotlib.use("Agg")
-        x_axis = np.arange(0, epochs)
-        plt.style.use("ggplot")
-        plt.figure(figsize=(8, 6), dpi=80)
-        plt.plot(x_axis,
-                 model_training_history.history["loss"],
-                 label="Training Loss")
-        plt.plot(x_axis,
-                 model_training_history.history["val_loss"],
-                 label="Validation Loss")
-        plt.plot(x_axis,
-                 model_training_history.history["accuracy"],
-                 label="Training Accuracy")
-        plt.plot(x_axis,
-                 model_training_history.history["val_accuracy"],
-                 label="Validation Accuracy")
-        plt.title("Training/Validation Loss & Accuracy")
-        plt.xlabel("Epoch #")
-        plt.ylabel("Loss/Accuracy")
-        plt.legend()
-        if save_path:
-            plt.savefig(save_path)
-        plt.show()
+        if use_matplotlib:
+            if save_path:
+                matplotlib.use("Agg")
+            x_axis = np.arange(0, epochs)
+            plt.style.use("ggplot")
+            plt.figure(figsize=(8, 6), dpi=80)
+            plt.plot(x_axis,
+                     model_training_history.history["loss"],
+                     label="Training Loss")
+            plt.plot(x_axis,
+                     model_training_history.history["val_loss"],
+                     label="Validation Loss")
+            plt.plot(x_axis,
+                     model_training_history.history["accuracy"],
+                     label="Training Accuracy")
+            plt.plot(x_axis,
+                     model_training_history.history["val_accuracy"],
+                     label="Validation Accuracy")
+            plt.title("Training/Validation Loss & Accuracy")
+            plt.xlabel("Epoch #")
+            plt.ylabel("Loss/Accuracy")
+            plt.legend()
+            if save_path:
+                plt.savefig(save_path)
+            plt.show()
+        else:
+            plot_training_metrics_upgraded(epochs, model_training_history,
+                                           save_path)
     except Exception as e:
         raise e
 
@@ -116,5 +124,48 @@ def draw_faces(image, faces):
         ]
 
         return image
+    except Exception as e:
+        raise e
+
+
+def plot_training_metrics_upgraded(epochs,
+                                   model_training_history,
+                                   save_path=None):
+    try:
+        fig = graph.Figure()
+        x_axis = np.arange(0, epochs)
+
+        fig.add_trace(
+            graph.Scatter(x=x_axis,
+                          y=model_training_history.history["loss"],
+                          mode='lines',
+                          name='Training Loss'))
+        fig.add_trace(
+            graph.Scatter(x=x_axis,
+                          y=model_training_history.history["val_loss"],
+                          mode='lines',
+                          name='Validation Loss'))
+        fig.add_trace(
+            graph.Scatter(x=x_axis,
+                          y=model_training_history.history["accuracy"],
+                          mode='lines',
+                          name='Training Accuracy'))
+        fig.add_trace(
+            graph.Scatter(x=x_axis,
+                          y=model_training_history.history["val_accuracy"],
+                          mode='lines',
+                          name='Validation Accuracy'))
+
+        fig.update_layout(
+            autosize=False,
+            width=1000,
+            height=600,
+            paper_bgcolor="#996633",
+        )
+
+        if save_path:
+            fig.write_image(save_path)
+
+        fig.show()
     except Exception as e:
         raise e
