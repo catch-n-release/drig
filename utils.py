@@ -8,6 +8,7 @@ from keras.layers.normalization import BatchNormalization
 from collections import defaultdict
 import visualkeras
 import random
+import matplotlib
 
 
 def display_image(image):
@@ -17,11 +18,13 @@ def display_image(image):
         raise e
 
 
-def plot_training_metrics(epochs, model_training_history):
+def plot_training_metrics(epochs, model_training_history, save_path=None):
     try:
+        if save_path:
+            matplotlib.use("Agg")
         x_axis = np.arange(0, epochs)
         plt.style.use("ggplot")
-        plt.figure()
+        plt.figure(figsize=(8, 6), dpi=80)
         plt.plot(x_axis,
                  model_training_history.history["loss"],
                  label="Training Loss")
@@ -38,6 +41,8 @@ def plot_training_metrics(epochs, model_training_history):
         plt.xlabel("Epoch #")
         plt.ylabel("Loss/Accuracy")
         plt.legend()
+        if save_path:
+            plt.savefig(save_path)
         plt.show()
     except Exception as e:
         raise e
