@@ -139,7 +139,8 @@ cython_debug/
 
 #Dataset Folder
 datasets/
-!datasets/datasetloader.py
+!datasets/*.py
+
 
 #Binary File
 .DS_Store
