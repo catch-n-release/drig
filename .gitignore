@@ -138,8 +138,9 @@ dmypy.json
 cython_debug/
 
 #Dataset Folder
-datasets/
+datasets/*
 !datasets/*.py
+
 
 
 #Binary File
