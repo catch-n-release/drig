@@ -3,13 +3,20 @@ import numpy as np
 import dlib
 import cvlib as cv
 import face_recognition
+import os
 
 
 class Detectors:
     def __init__(self, image):
         try:
-            self.alt2_cascade_xml_path = "/Users/suyashsrivastava/drig/face/haar_cascades/haarcascade_frontalface_alt2.xml"
-            self.default_cascade_xml_path = "/Users/suyashsrivastava/drig/face/haar_cascades/haarcascade_frontalface_default.xml"
+            self.alt2_cascade_xml_path = os.path.abspath(
+                os.path.join(
+                    os.path.pardir,
+                    "face/haar_cascades/haarcascade_frontalface_alt2.xml"))
+            self.default_cascade_xml_path = os.path.abspath(
+                os.path.join(
+                    os.path.pardir,
+                    "face/haar_cascades/haarcascade_frontalface_default.xml"))
             self.rgb_image = image
             self.gray_scale_image = cv2.cvtColor(self.rgb_image,
                                                  cv2.COLOR_BGR2GRAY)
@@ -78,3 +85,9 @@ class Detectors:
             return np.array(faces)
         except Exception as e:
             raise e
+
+
+print(
+    os.path.abspath(
+        os.path.join(os.path.pardir,
+                     "face/haar_cascades/haarcascade_frontalface_alt2.xml")))
