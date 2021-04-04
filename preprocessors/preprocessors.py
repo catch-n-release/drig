@@ -68,3 +68,24 @@ class ImageToArrayPreprocessor:
             return img_to_array(image, data_format=self.data_format)
         except Exception as e:
             raise e
+
+
+class NormalizationPreprocessor:
+    def __init__(self, mean_red, mean_green, mean_blue):
+        try:
+            self.mean_red = mean_red
+            self.mean_green = mean_green
+            self.mean_blue = mean_blue
+        except Exception as e:
+            raise e
+
+    def preprocess(self, image):
+        try:
+            blue_channel, green_channel, red_channel = cv2.split(image)
+            blue_channel = blue_channel - self.mean_blue
+            green_channel = green_channel - self.mean_green
+            red_channel = red_channel - self.mean_red
+
+            return cv2.merge([blue_channel, green_channel, red_channel])
+        except Exception as e:
+            raise e
