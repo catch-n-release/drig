@@ -2,6 +2,7 @@ import cv2
 import imutils
 from keras.preprocessing.image import img_to_array
 from sklearn.feature_extraction.image import extract_patches_2d
+import numpy as np
 
 
 class ShapePreprocessor:
@@ -104,5 +105,55 @@ class WindowPreprocessor:
         try:
             return extract_patches_2d(image, (self.height, self.width),
                                       max_patches=1)[0]
+        except Exception as e:
+            raise e
+
+
+class OverSamplingPreprocessor:
+    def __init__(self,
+                 width,
+                 height,
+                 interpolation=cv2.INTER_AREA,
+                 x_flip=True):
+        try:
+            self.width = width
+            self.height = height
+            self.interpolation = interpolation
+            self.x_flip = x_flip
+        except Exception as e:
+            raise e
+
+    def preprocess(self, image):
+        try:
+            crops = list()
+            image_height, image_width = image.shape[:2]
+            top_left = (0, 0, self.width, self.height)
+            top_right = (image_width - self.width, 0, image_width, self.height)
+            bottom_left = (0, image_height - self.height, self.width,
+                           image_height)
+            bottom_right = (image_width - self.width,
+                            image_height - self.height, image_width,
+                            image_height)
+            delta_width = int(0.5 * (image_width - self.width))
+            delta_height = int(0.5 * (image_height - self.height))
+            center = (delta_width, delta_height, image_width - delta_width,
+                      image_height - delta_height)
+            points = [top_left, top_right, bottom_left, bottom_right, center]
+
+            for left, top, bottom, right in points:
+                cropped_image = image[top:bottom, left:right]
+
+                cropped_image = cv2.resize(cropped_image,
+                                           (self.width, self.height),
+                                           interpolation=self.interpolation)
+                crops.append(cropped_image)
+
+            if self.x_flip:
+                flipped_cropped_images = [
+                    cv2.flip(cropped_image, 1) for cropped_image in crops
+                ]
+            crops.extend(flipped_cropped_images)
+
+            return np.array(crops)
         except Exception as e:
             raise e
