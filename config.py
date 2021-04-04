@@ -1,5 +1,8 @@
 import enum
 import os
+import logging as log
+
+log.basicConfig(level=log.INFO)
 
 
 class DogsVsCatsConfig(enum.Enum):
