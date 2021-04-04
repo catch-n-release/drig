@@ -1,6 +1,7 @@
 import cv2
 import imutils
 from keras.preprocessing.image import img_to_array
+from sklearn.feature_extraction.image import extract_patches_2d
 
 
 class ShapePreprocessor:
@@ -87,5 +88,21 @@ class NormalizationPreprocessor:
             red_channel = red_channel - self.mean_red
 
             return cv2.merge([blue_channel, green_channel, red_channel])
+        except Exception as e:
+            raise e
+
+
+class WindowPreprocessor:
+    def __init__(self, width, height):
+        try:
+            self.width = width
+            self.height = height
+        except Exception as e:
+            raise e
+
+    def preprocess(self, image):
+        try:
+            return extract_patches_2d(image, (self.height, self.width),
+                                      max_patches=1)[0]
         except Exception as e:
             raise e
