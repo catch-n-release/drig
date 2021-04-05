@@ -120,9 +120,3 @@ class HDF5DatumBuilder:
             log.exception("---ERROR: LABELS NOT ENCODED----")
         except Exception as e:
             raise e
-
-
-# data_builder = Hdf5DatumBuilder(DogsVsCatsConfig)
-# data_builder.enconde_labels()
-# split_set = data_builder.train_val_test_split()
-# print(len(split_set.get("TRAINING")[0]))
