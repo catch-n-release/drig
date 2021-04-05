@@ -11,7 +11,7 @@ from drig.preprocessors.preprocessors import UniformAspectPreprocessor
 from drig.config import log, DogsVsCatsConfig
 
 
-class Hdf5DatumBuilder:
+class HDF5DatumBuilder:
     def __init__(self, config: Enum):
         try:
             log.info("-----INTIALIZING HDF5 DATASET BUILDER-----")
