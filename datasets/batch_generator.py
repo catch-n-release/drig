@@ -20,7 +20,7 @@ class HDF5BatchComposer:
             self.binarize = binarize
             self.classes = classes
 
-            self.datum = h5py.File(self.datum_path)
+            self.datum = h5py.File(self.datum_path, mode="r")
             self.num_data = self.datum["labels"].shape[0]
         except Exception as e:
             raise e
@@ -38,8 +38,8 @@ class HDF5BatchComposer:
                             preprocessor.preprocess(image) for image in images
                             for preprocessor in self.preprocessors
                         ]
-                    if images.shape[0] != preprocessed_images.shape[0]:
-                        raise Exception("Error post image processing")
+                        if images.shape[0] != preprocessed_images.shape[0]:
+                            raise Exception("Error post image processing")
                     images = np.array(images)
                     if self.binarize:
                         labels = np_utils.to_categorical(labels, self.classes)
@@ -49,7 +49,7 @@ class HDF5BatchComposer:
                             self.data_augmenter.flow(
                                 images, labels, batch_size=self.batch_size))
 
-                    yield images, labels
+                    yield (images, labels)
                 epochs += 1
 
         except Exception as e:
