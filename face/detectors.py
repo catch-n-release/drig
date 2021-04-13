@@ -97,6 +97,18 @@ class Detectors:
         except Exception as e:
             raise e
 
+    def haar_eyes_detector(self,
+                           face_image,
+                           cascade_path=None,
+                           scale=None,
+                           min_neighbours=None,
+                           min_size=None,
+                           max_size=None):
+        try:
+            face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+            eyes_cascade = self.eyes_xml_path
+            if cascade_path:
+                eyes_cascade = cascade_path
 
 print(
     os.path.abspath(
