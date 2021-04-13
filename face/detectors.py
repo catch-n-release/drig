@@ -17,6 +17,13 @@ class Detectors:
                 os.path.join(
                     os.path.pardir,
                     "face/haar_cascades/haarcascade_frontalface_default.xml"))
+            self.nose_xml_path = os.path.abspath(
+                os.path.join(os.path.pardir, "face/haar_cascades/nose.xml"))
+            self.eyes_xml_path = os.path.abspath(
+                os.path.join(os.path.pardir,
+                             "face/haar_cascades/eyes_45_11.xml"))
+            self.mouth_xml_path = os.path.abspath(
+                os.path.join(os.path.pardir, "face/haar_cascades/mouth.xml"))
             self.rgb_image = image
             self.gray_scale_image = cv2.cvtColor(self.rgb_image,
                                                  cv2.COLOR_BGR2GRAY)
@@ -24,11 +31,12 @@ class Detectors:
         except Exception as e:
             raise e
 
-    def haar_detector(self,
-                      cascade_type="alt2",
-                      scale=None,
-                      min_size=None,
-                      max_size=None):
+    def haar_face_detector(self,
+                           cascade_type="alt2",
+                           min_neighbours=None,
+                           scale=None,
+                           min_size=None,
+                           max_size=None):
         try:
             if cascade_type != "alt2":
                 cascade = self.default_cascade_xml_path
@@ -36,24 +44,27 @@ class Detectors:
                 cascade = self.alt2_cascade_xml_path
 
             if scale or min_size or max_size:
-                faces = cv2.face.getFacesHAAR(self.rgb_image, cascade)
-                if faces:
-                    faces = np.squeeze(faces)
-
-            else:
-
                 faces = cv2.CascadeClassifier(cascade).detectMultiScale(
                     self.gray_scale_image,
+                    minNeighbors=min_neighbours,
                     scaleFactor=scale,
                     minSize=min_size,
                     maxSize=max_size)
-            faces = [[x, y, x + w, y + h] for x, y, w, h in faces]
-            return np.array(faces)
-
+            else:
+                ret, faces = cv2.face.getFacesHAAR(self.rgb_image, cascade)
+                if ret:
+                    if len(faces) > 1:
+                        faces = np.squeeze(faces)
+                    elif len(faces) == 1:
+                        faces = [np.squeeze(faces)]
+            if len(faces):
+                faces = [[x, y, x + w, y + h] for x, y, w, h in faces]
+                return np.array(faces)
+            return None
         except Exception as e:
             raise e
 
-    def dlib_hog_detector(self, scale=0):
+    def dlib_hog_face_detector(self, scale=0):
         try:
             dlib_detector = dlib.get_frontal_face_detector()
             faces = dlib_detector(self.gray_scale_image, scale)

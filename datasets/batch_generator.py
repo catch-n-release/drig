@@ -32,15 +32,22 @@ class HDF5BatchComposer:
                 for i in np.arange(0, self.num_data, self.batch_size):
                     images = self.datum["images"][i:i + self.batch_size]
                     labels = self.datum["labels"][i:i + self.batch_size]
+                    print(len(images))
 
                     if self.preprocessors:
-                        preprocessed_images = [
-                            preprocessor.preprocess(image) for image in images
-                            for preprocessor in self.preprocessors
-                        ]
-                        if images.shape[0] != preprocessed_images.shape[0]:
-                            raise Exception("Error post image processing")
-                    images = np.array(images)
+                        preprocessed_images = []
+                        #     preprocessor.preprocess(image) for image in images
+                        #     for preprocessor in self.preprocessors
+                        # ]
+                        for image in images:
+                            for preprocessor in self.preprocessors:
+                                preprocessed_image = preprocessor.preprocess(
+                                    image)
+                            preprocessed_images.append(preprocessed_image)
+                    print(len(preprocessed_images))
+                    if len(images) != len(preprocessed_images):
+                        raise Exception("Error post image processing")
+                    images = np.array(preprocessed_images)
                     if self.binarize:
                         labels = np_utils.to_categorical(labels, self.classes)
 
