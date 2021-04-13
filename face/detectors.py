@@ -121,6 +121,7 @@ class Detectors:
             return np.array(eyes)
         except Exception as e:
             raise e
+
     def haar_nose_detector(self,
                            face_image,
                            cascade_path=None,
