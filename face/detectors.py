@@ -86,7 +86,7 @@ class Detectors:
         except Exception as e:
             raise e
 
-    def cvlib_detector(self, threshold=0.5, gpu=False):
+    def cvlib_face_detector(self, threshold=0.5, gpu=False):
         try:
             faces, confidences = cv.detect_face(self.rgb_image,
                                                 threshold=0.5,
