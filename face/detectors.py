@@ -145,3 +145,28 @@ class Detectors:
             return np.array(noses)
         except Exception as e:
             raise e
+
+    def haar_mouth_detector(self,
+                            face_image,
+                            cascade_path=None,
+                            scale=None,
+                            min_neighbours=None,
+                            min_size=None,
+                            max_size=None):
+        try:
+            face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+            mouth_cascade = self.mouth_xml_path
+            if cascade_path:
+                mouth_cascade = cascade_path
+
+            mouths = cv2.CascadeClassifier(mouth_cascade).detectMultiScale(
+                face_image,
+                scaleFactor=scale,
+                minNeighbors=min_neighbours,
+                minSize=min_size,
+                maxSize=max_size)
+            if len(mouths):
+                mouths = [[x, y, x + w, y + h] for x, y, w, h in mouths]
+            return np.array(mouths)
+        except Exception as e:
+            raise e
