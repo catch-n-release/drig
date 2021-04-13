@@ -110,7 +110,14 @@ class Detectors:
             if cascade_path:
                 eyes_cascade = cascade_path
 
-print(
-    os.path.abspath(
-        os.path.join(os.path.pardir,
-                     "face/haar_cascades/haarcascade_frontalface_alt2.xml")))
+            eyes = cv2.CascadeClassifier(eyes_cascade).detectMultiScale(
+                face_image,
+                scaleFactor=scale,
+                minNeighbors=min_neighbours,
+                minSize=min_size,
+                maxSize=max_size)
+            if len(eyes):
+                eyes = [[x, y, x + w, y + h] for x, y, w, h in eyes]
+            return np.array(eyes)
+        except Exception as e:
+            raise e
