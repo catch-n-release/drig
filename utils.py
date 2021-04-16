@@ -10,6 +10,7 @@ import visualkeras
 import random
 import matplotlib
 import plotly.graph_objects as graph
+from imutils import paths
 
 
 def display_image(image):
@@ -22,7 +23,8 @@ def display_image(image):
 def plot_training_metrics(epochs,
                           model_training_history,
                           save_path=None,
-                          use_matplotlib=False):
+                          use_matplotlib=False,
+                          callback=False):
     try:
         if use_matplotlib:
             if save_path:
@@ -50,8 +52,10 @@ def plot_training_metrics(epochs,
                 plt.savefig(save_path)
             plt.show()
         else:
-            plot_training_metrics_upgraded(epochs, model_training_history,
-                                           save_path)
+            plot_training_metrics_upgraded(epochs,
+                                           model_training_history,
+                                           callback,
+                                           save_path=save_path)
     except Exception as e:
         raise e
 
@@ -105,8 +109,9 @@ def visualize_network(model, scale_xy=2):
         raise e
 
 
-def display_data(image_paths):
+def display_image_data(image_datum_path):
     try:
+        image_paths = list(paths.list_images(image_datum_path))
         image_list = [
             Image.open(image_path)
             for image_path in random.sample(image_paths, 4)
@@ -128,31 +133,46 @@ def draw_faces(image, faces):
         raise e
 
 
-def plot_training_metrics_upgraded(epochs,
-                                   model_training_history,
-                                   save_path=None):
+def plot_training_metrics_upgraded(
+    epochs,
+    model_training_history,
+    callback,
+    save_path=None,
+):
     try:
         fig = graph.Figure()
         x_axis = np.arange(0, epochs)
 
+        if callback:
+            y_training_loss = model_training_history["loss"]
+            y_validation_loss = model_training_history["val_loss"]
+            y_training_accuracy = model_training_history["accuracy"]
+            y_validation_accuracy = model_training_history["val_accuracy"]
+        else:
+            y_training_loss = model_training_history.history["loss"]
+            y_validation_loss = model_training_history.history["val_loss"]
+            y_training_accuracy = model_training_history.history["accuracy"]
+            y_validation_accuracy = model_training_history.history[
+                "val_accuracy"]
+
         fig.add_trace(
             graph.Scatter(x=x_axis,
-                          y=model_training_history.history["loss"],
+                          y=y_training_loss,
                           mode='lines',
                           name='Training Loss'))
         fig.add_trace(
             graph.Scatter(x=x_axis,
-                          y=model_training_history.history["val_loss"],
+                          y=y_validation_loss,
                           mode='lines',
                           name='Validation Loss'))
         fig.add_trace(
             graph.Scatter(x=x_axis,
-                          y=model_training_history.history["accuracy"],
+                          y=y_training_accuracy,
                           mode='lines',
                           name='Training Accuracy'))
         fig.add_trace(
             graph.Scatter(x=x_axis,
-                          y=model_training_history.history["val_accuracy"],
+                          y=y_validation_accuracy,
                           mode='lines',
                           name='Validation Accuracy'))
 
@@ -166,6 +186,7 @@ def plot_training_metrics_upgraded(epochs,
         if save_path:
             fig.write_image(save_path)
 
-        fig.show()
+        if not callback:
+            fig.show()
     except Exception as e:
         raise e

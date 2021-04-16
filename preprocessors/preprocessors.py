@@ -83,10 +83,11 @@ class NormalizationPreprocessor:
 
     def preprocess(self, image):
         try:
-            blue_channel, green_channel, red_channel = cv2.split(image)
-            blue_channel = blue_channel - self.mean_blue
-            green_channel = green_channel - self.mean_green
-            red_channel = red_channel - self.mean_red
+            blue_channel, green_channel, red_channel = cv2.split(
+                image.astype("float32"))
+            blue_channel -= self.mean_blue
+            green_channel -= self.mean_green
+            red_channel -= red_channel - self.mean_red
 
             return cv2.merge([blue_channel, green_channel, red_channel])
         except Exception as e:
@@ -94,10 +95,10 @@ class NormalizationPreprocessor:
 
 
 class WindowPreprocessor:
-    def __init__(self, width, height):
+    def __init__(self, height, width):
         try:
-            self.width = width
             self.height = height
+            self.width = width
         except Exception as e:
             raise e
 
@@ -111,13 +112,13 @@ class WindowPreprocessor:
 
 class OverSamplingPreprocessor:
     def __init__(self,
-                 width,
                  height,
+                 width,
                  interpolation=cv2.INTER_AREA,
                  x_flip=True):
         try:
-            self.width = width
             self.height = height
+            self.width = width
             self.interpolation = interpolation
             self.x_flip = x_flip
         except Exception as e:

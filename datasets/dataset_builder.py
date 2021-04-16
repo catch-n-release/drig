@@ -22,9 +22,7 @@ class HDF5DatumBuilder:
                 config.LABEL_FROM_PATH(image_path)
                 for image_path in self.image_paths
             ]
-            self.red = list()
-            self.green = list()
-            self.blue = list()
+            self.red, self.green, self.blue = list(), list(), list()
             self.preprocessing_height = 256
             self.preprocessing_width = 256
             self.preprocessing_depth = 3

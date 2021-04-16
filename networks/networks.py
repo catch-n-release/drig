@@ -18,6 +18,7 @@ class AlexNet:
                 channel_index = 1
             net = Sequential()
             ########
+            # CHUNK 1
             ########
             net.add(
                 Conv2D(96, (11, 11),
@@ -29,7 +30,9 @@ class AlexNet:
             net.add(BatchNormalization(axis=channel_index))
             net.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
             net.add(Dropout(0.25))
-            #########
+            ########
+            # CHUNK 2
+            ########
             net.add(
                 Conv2D(256, (5, 5),
                        padding="same",
@@ -39,6 +42,7 @@ class AlexNet:
             net.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
             net.add(Dropout(0.25))
             #########
+            # CHUNK 3
             #########
             net.add(
                 Conv2D(384, (3, 3),
@@ -64,6 +68,7 @@ class AlexNet:
             net.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
             net.add(Dropout(0.25))
             ########
+            # CHUNK 4
             ########
             net.add(Flatten())
             net.add(Dense(4096, kernel_regularizer=l2(l2_regularization)))

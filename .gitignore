@@ -148,3 +148,6 @@ datasets/*
 
 #Model Files
 models/
+
+#temp ignore
+./notebooks/TL_Model_Feature_Extractor.ipynb
