@@ -6,7 +6,7 @@ import cv2
 from imutils import paths
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from drig.feature.feature import FeatureCondenser
+from drig.feature.condenser import FeatureCondenser
 from drig.preprocessors.preprocessors import UniformAspectPreprocessor
 from drig.config import log, DogsVsCatsConfig
 
