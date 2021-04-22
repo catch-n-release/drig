@@ -1,6 +1,6 @@
 from imutils import paths
 import progressbar
-from drig.feature.condenser import FeatureCondenser
+from drig.feature import FeatureCondenser
 import numpy as np
 import random
 from sklearn.preprocessing import LabelEncoder
@@ -53,15 +53,15 @@ class FeatureExtractor:
         except Exception as e:
             raise e
 
-    def extract_features(self,
-                         target_image_dim: tuple,
-                         feature_size: int,
-                         group_name: str = "features"):
+    def extract(self,
+                target_image_dim: tuple,
+                feature_size: int,
+                group_name: str = "features"):
         try:
             self.encode_labels()
             feature_datum = self.feature_condeser(feature_size, group_name)
             widgets = [
-                f"Extracting Features: ",
+                "Extracting Features: ",
                 progressbar.Percentage(),
                 " ",
                 progressbar.Bar(marker="⎍"),
