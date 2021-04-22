@@ -24,6 +24,7 @@ class FeatureExtractor:
             self.net = network
             self.image_paths = list(paths.list_images(self.image_datum_path))
             self.num_images = len(self.image_paths)
+
             if shuffle:
                 random.shuffle(self.image_paths)
 
@@ -41,9 +42,7 @@ class FeatureExtractor:
         except Exception as e:
             raise e
 
-    def feature_condeser(self,
-                         feature_size: int,
-                         group_name: str = "features"):
+    def feature_condeser(self, feature_size: int, group_name: str):
         try:
             feature_datum = FeatureCondenser((self.num_images, feature_size),
                                              self.feature_datum_path,
@@ -57,7 +56,7 @@ class FeatureExtractor:
     def extract_features(self,
                          target_image_dim: tuple,
                          feature_size: int,
-                         group_name: str = None):
+                         group_name: str = "features"):
         try:
             self.encode_labels()
             feature_datum = self.feature_condeser(feature_size, group_name)
