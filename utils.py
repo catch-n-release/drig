@@ -27,36 +27,42 @@ def plot_training_metrics(epochs,
                           use_matplotlib=False,
                           callback=False):
     try:
+
+        if callback:
+            y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy = model_training_history[
+                "loss"], model_training_history[
+                    "val_loss"], model_training_history[
+                        "accuracy"], model_training_history["val_accuracy"]
+
+        else:
+            y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy = model_training_history.history[
+                "loss"], model_training_history.history[
+                    "val_loss"], model_training_history.history[
+                        "accuracy"], model_training_history.history[
+                            "val_accuracy"]
+        x_axis = np.arange(0, len(y_training_loss))
         if use_matplotlib:
             if save_path:
                 matplotlib.use("Agg")
-            x_axis = np.arange(0, epochs)
             plt.style.use("ggplot")
             plt.figure(figsize=(8, 6), dpi=80)
+            plt.plot(x_axis, y_training_loss, label="Training Loss")
+            plt.plot(x_axis, y_validation_loss, label="Validation Loss")
+            plt.plot(x_axis, y_training_accuracy, label="Training Accuracy")
             plt.plot(x_axis,
-                     model_training_history.history["loss"],
-                     label="Training Loss")
-            plt.plot(x_axis,
-                     model_training_history.history["val_loss"],
-                     label="Validation Loss")
-            plt.plot(x_axis,
-                     model_training_history.history["accuracy"],
-                     label="Training Accuracy")
-            plt.plot(x_axis,
-                     model_training_history.history["val_accuracy"],
+                     y_validation_accuracy,
                      label="Validation Accuracy")
             plt.title("Training/Validation Loss & Accuracy")
-            plt.xlabel("Epoch #")
-            plt.ylabel("Loss/Accuracy")
+            plt.xlabel("EPOCH #")
+            plt.ylabel("LOSS/ACCURACY")
             plt.legend()
             if save_path:
                 plt.savefig(save_path)
+                return
             plt.show()
         else:
-            plot_training_metrics_upgraded(epochs,
-                                           model_training_history,
-                                           callback,
-                                           save_path=save_path)
+            plot_values = x_axis, y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy
+            plot(plot_values, callback, save_path=save_path)
     except Exception as e:
         raise e
 
@@ -98,7 +104,7 @@ def visualize_network(model,
                       save_image_path: str = None):
     try:
         font = ImageFont.truetype(
-            "/System/Library/Fonts/Supplemental/Trebuchet MS Italic.ttf", 16)
+            "/System/Library/Fonts/Supplemental/Skia.ttf", 16)
 
         color_map = defaultdict(dict)
         color_map[Conv2D]['fill'] = '#CA6F1E'
@@ -143,27 +149,15 @@ def draw_faces(image, faces):
         raise e
 
 
-def plot_training_metrics_upgraded(
-    epochs,
-    model_training_history,
+def plot(
+    plot_values,
     callback,
     save_path=None,
 ):
     try:
         fig = graph.Figure()
-        x_axis = np.arange(0, epochs)
-
-        if callback:
-            y_training_loss = model_training_history["loss"]
-            y_validation_loss = model_training_history["val_loss"]
-            y_training_accuracy = model_training_history["accuracy"]
-            y_validation_accuracy = model_training_history["val_accuracy"]
-        else:
-            y_training_loss = model_training_history.history["loss"]
-            y_validation_loss = model_training_history.history["val_loss"]
-            y_training_accuracy = model_training_history.history["accuracy"]
-            y_validation_accuracy = model_training_history.history[
-                "val_accuracy"]
+        x_axis, *loss_accuracy_value_list = plot_values
+        y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy = loss_accuracy_value_list
 
         fig.add_trace(
             graph.Scatter(x=x_axis,
@@ -186,12 +180,11 @@ def plot_training_metrics_upgraded(
                           mode='lines',
                           name='Validation Accuracy'))
 
-        fig.update_layout(
-            autosize=False,
-            width=1000,
-            height=600,
-            paper_bgcolor="#996633",
-        )
+        fig.update_layout(autosize=False,
+                          width=1000,
+                          height=600,
+                          xaxis_title="EPOCH #",
+                          yaxis_title="LOSS/ACCURACY")
 
         if save_path:
             fig.write_image(save_path)
