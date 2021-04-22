@@ -11,6 +11,7 @@ import random
 import matplotlib
 import plotly.graph_objects as graph
 from imutils import paths
+from PIL import ImageFont
 
 
 def display_image(image):
@@ -91,8 +92,14 @@ def get_ranked_accuracies(predictions, labels):
         raise e
 
 
-def visualize_network(model, scale_xy=2):
+def visualize_network(model,
+                      scale_xy: int = 2,
+                      spacing: int = 10,
+                      save_image_path: str = None):
     try:
+        font = ImageFont.truetype(
+            "/System/Library/Fonts/Supplemental/Trebuchet MS Italic.ttf", 16)
+
         color_map = defaultdict(dict)
         color_map[Conv2D]['fill'] = '#CA6F1E'
         color_map[Activation]['fill'] = '#660000'
@@ -103,8 +110,11 @@ def visualize_network(model, scale_xy=2):
         color_map[BatchNormalization]['fill'] = '#BDC3C7'
         return visualkeras.layered_view(model,
                                         color_map=color_map,
+                                        font=font,
                                         legend=True,
-                                        scale_xy=scale_xy)
+                                        scale_xy=scale_xy,
+                                        spacing=spacing,
+                                        to_file=save_image_path)
     except Exception as e:
         raise e
 
