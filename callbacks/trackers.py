@@ -46,10 +46,13 @@ class LossAccuracyTracker(BaseLogger):
                 json_file.close
 
             if len(self.net_training_history["loss"]) > 1:
-                plot_training_metrics(epoch,
-                                      self.net_training_history,
-                                      save_path=self.plot_image_path,
-                                      callback=True)
+                plot_training_metrics(
+                    epoch,
+                    self.net_training_history,
+                    save_path=self.plot_image_path,
+                    callback=True,
+                    use_matplotlib=False,
+                )
 
         except Exception as e:
             raise e
