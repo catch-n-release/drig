@@ -10,7 +10,7 @@ class FeatureCondenser:
                  buffer_size=1000):
         try:
             if os.path.exists(output_model_path):
-                raise Exception(f"File Already Exists!")
+                raise Exception("File Already Exists!")
             self.global_index = 0
             self.buffer_size = buffer_size
             self.buffer = dict(data=list(), labels=list())
