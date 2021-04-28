@@ -12,6 +12,7 @@ import matplotlib
 import plotly.graph_objects as graph
 from imutils import paths
 from PIL import ImageFont
+import os
 
 
 def display_image(image):
@@ -101,6 +102,7 @@ def get_ranked_accuracies(predictions, labels):
 def visualize_network(model,
                       scale_xy: int = 2,
                       spacing: int = 10,
+                      scale_z=0.1,
                       save_image_path: str = None):
     try:
         font = ImageFont.truetype(
@@ -120,13 +122,16 @@ def visualize_network(model,
                                         legend=True,
                                         scale_xy=scale_xy,
                                         spacing=spacing,
-                                        to_file=save_image_path)
+                                        to_file=save_image_path,
+                                        scale_z=scale_z)
     except Exception as e:
         raise e
 
 
 def display_image_data(image_datum_path):
     try:
+        if not os.path.exists(image_datum_path):
+            raise Exception(f"Invalid Path : {image_datum_path}")
         image_paths = list(paths.list_images(image_datum_path))
         image_list = [
             Image.open(image_path)
