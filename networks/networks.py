@@ -14,7 +14,11 @@ class AlexNet:
             input_dim = (height, width, depth)
             channel_index = -1
             if backend.image_data_format() == "channels_first":
-                input_dim = (depth, width, height)
+                input_dim = (
+                    depth,
+                    height,
+                    width,
+                )
                 channel_index = 1
             net = Sequential()
             ########
@@ -73,13 +77,13 @@ class AlexNet:
             net.add(Flatten())
             net.add(Dense(4096, kernel_regularizer=l2(l2_regularization)))
             net.add(Activation("relu"))
-            net.add(BatchNormalization(axis=channel_index))
-            net.add(Dropout(0.50))
+            net.add(BatchNormalization())
+            net.add(Dropout(0.5))
             #########
             net.add(Dense(4096, kernel_regularizer=l2(l2_regularization)))
             net.add(Activation("relu"))
-            net.add(BatchNormalization(axis=channel_index))
-            net.add(Dropout(0.50))
+            net.add(BatchNormalization())
+            net.add(Dropout(0.5))
             #########
             net.add(Dense(classes, kernel_regularizer=l2(l2_regularization)))
             net.add(Activation("softmax"))
