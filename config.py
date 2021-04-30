@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 import os
-import logging as log
+import logging
 
-log.basicConfig(level=log.INFO)
+logging.basicConfig(level=logging.INFO)
 
 
 @dataclass(frozen=True)
