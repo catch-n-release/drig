@@ -40,8 +40,8 @@ class FeatureExtractor:
             if shuffle:
                 np.random.shuffle(self.image_paths)
             self.feature_size = FeatureExtractor.feature_size(
-                self.net, self.image_paths[0], self.net_input_dim,
-                self.image_net)
+                self.net, np.random.choice(self.image_paths),
+                self.net_input_dim, self.image_net)
 
         except Exception as e:
             raise e
