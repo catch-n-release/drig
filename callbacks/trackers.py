@@ -10,7 +10,9 @@ class LossAccuracyTracker(BaseLogger):
                  plot_image_path: str,
                  json_path: str = None,
                  starting_epoch: int = 0):
+
         super(LossAccuracyTracker, self).__init__()
+
         self.plot_image_path = plot_image_path
         self.json_path = json_path
         self.starting_epoch = starting_epoch
@@ -43,15 +45,14 @@ class LossAccuracyTracker(BaseLogger):
             if self.json_path:
                 json_file = open(self.json_path, "w")
                 json_file.write(json.dumps(self.net_training_history))
-                json_file.close
+                json_file.close()
 
             if len(self.net_training_history["loss"]) > 1:
                 plot_training_metrics(
-                    epoch,
-                    self.net_training_history,
+                    epochs=epoch,
+                    model_training_history=self.net_training_history,
                     save_path=self.plot_image_path,
                     callback=True,
-                    use_matplotlib=False,
                 )
 
         except Exception as e:
