@@ -2,12 +2,13 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from keras.layers.convolutional import Conv2D, MaxPooling2D
+from keras.layers.convolutional import Conv2D, MaxPooling2D, AveragePooling2D
 from keras.layers.core import Activation, Flatten, Dense, Dropout
 from keras.layers.normalization import BatchNormalization
+from keras.layers import Concatenate
+from keras.utils import plot_model
 from collections import defaultdict
 import visualkeras
-import random
 import matplotlib
 import plotly.graph_objects as graph
 from imutils import paths
@@ -135,10 +136,12 @@ def visualize_network(model,
         color_map[Conv2D]['fill'] = '#CA6F1E'
         color_map[Activation]['fill'] = '#660000'
         color_map[Dropout]['fill'] = '#212F3D'
-        color_map[MaxPooling2D]['fill'] = '#2471A3'
+        color_map[MaxPooling2D]['fill'] = '#006fC1'
         color_map[Dense]['fill'] = '#145A32'
         color_map[Flatten]['fill'] = '#229954'
         color_map[BatchNormalization]['fill'] = '#BDC3C7'
+        color_map[AveragePooling2D]['fill'] = '#4EACF2'
+        color_map[Concatenate]['fill'] = "#4A235A"
         return visualkeras.layered_view(model,
                                         color_map=color_map,
                                         font=font,
