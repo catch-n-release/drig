@@ -154,14 +154,15 @@ def visualize_network(model,
         raise e
 
 
-def display_image_data(image_datum_path):
+def display_image_data(image_datum_path: str, image_dim: tuple = None):
     try:
         if not os.path.exists(image_datum_path):
             raise Exception(f"Invalid Path : {image_datum_path}")
         image_paths = list(paths.list_images(image_datum_path))
         image_list = [
-            Image.open(image_path)
-            for image_path in random.sample(image_paths, 4)
+            Image.open(image_path).resize(
+                (image_dim)) if image_dim else Image.open(image_path)
+            for image_path in np.random.choice(image_paths, 4)
         ]
         return visualkeras.utils.linear_layout(image_list)
     except Exception as e:
