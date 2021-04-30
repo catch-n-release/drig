@@ -1,1 +1,1 @@
-from drig.networks.networks import AlexNet, TinyVGG, CustomDense
+from drig.networks.networks import *
