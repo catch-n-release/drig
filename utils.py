@@ -229,3 +229,10 @@ def plot(
 
     except Exception as e:
         raise e
+
+
+def plot_network(net):
+    try:
+        return plot_model(net, show_dtype=True, show_shapes=True)
+    except Exception as e:
+        raise e
