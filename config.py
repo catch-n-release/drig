@@ -6,10 +6,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 @dataclass(frozen=True)
-class DogsVsCatsConfig:
+class DogsVsCats:
     DATASET_PATH: str = os.path.abspath(
         os.path.join(os.path.pardir, "datasets/kag_dogs_vs_cats"))
-    IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
+    TRAINING_IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
+
     HDF5_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
     TRAINING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
                                             "training_datum.hdf5")
