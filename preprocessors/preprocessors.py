@@ -23,7 +23,7 @@ class ShapePreprocessor:
 
 
 class UniformAspectPreprocessor():
-    def __init__(self, width, height, inter=cv2.INTER_AREA):
+    def __init__(self, height, width, inter=cv2.INTER_AREA):
         try:
             self.width = width
             self.height = height
