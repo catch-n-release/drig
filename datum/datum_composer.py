@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from drig.feature import FeatureCondenser
 from drig.preprocessors import UniformAspectPreprocessor
-from drig.config import log
+from drig.utils import log
 import os
 from dataclasses import dataclass
 
