@@ -18,11 +18,12 @@ class HDF5DatumComposer:
             log.info("-----INTIALIZING HDF5 DATASET BUILDER-----")
             self.config = config
             self.hdf5_datum_path = self.config.HDF5_DATUM_PATH
-            if not os.path.exists(self.hdf5_datum_path):
-                os.mkdir(self.hdf5_datum_path)
-            self.image_paths = list(paths.list_images(config.IMAGES_PATH))
+            os.makedirs(self.hdf5_datum_path, exist_ok=True)
+            self.image_paths = list(
+                paths.list_images(config.TRAINING_IMAGES_PATH))
             self.labels = [
-                config.LABEL_FROM_PATH(image_path)
+                image_path.replace(".", " ").replace(
+                    "/", " ").split(" ")[config.TRAINING_LABEL_INDEX]
                 for image_path in self.image_paths
             ]
             self.red, self.green, self.blue = list(), list(), list()
@@ -38,20 +39,27 @@ class HDF5DatumComposer:
         try:
             log.info("-----ENCODING LABELS-----")
             label_encoder = LabelEncoder()
-            self.labels = label_encoder.fit_transform(self.labels)
+            self.encoded_labels = label_encoder.fit_transform(self.labels)
         except Exception as e:
             raise e
 
-    def train_val_test_split(self):
+    def train_val_test_split(self, train_test_only: bool = False):
         try:
-            log.info(
-                "-----SLITTING DATA INTO TRAINING VALIDATION & TESTING-----")
+
+            self.enconde_labels()
             train_x_paths, test_x_paths, train_y_lables, test_y_labels = train_test_split(
                 self.image_paths,
-                self.labels,
+                self.encoded_labels,
                 test_size=self.config.NUM_TESTING_IMAGES,
                 random_state=42,
-                stratify=self.labels)
+                stratify=self.encoded_labels)
+            log.info("-----SLITTING DATA INTO TRAINING & TESTING SET-----")
+            if train_test_only:
+                split_set = dict(TRAINING=(train_x_paths, train_y_lables,
+                                           self.config.TRAINING_DATUM_PATH),
+                                 TESTING=(test_x_paths, test_y_labels,
+                                          self.config.TESTING_DATUM_PATH))
+                return split_set
 
             train_x_paths, val_x_paths, train_y_lables, val_y_labels = train_test_split(
                 train_x_paths,
@@ -59,7 +67,9 @@ class HDF5DatumComposer:
                 test_size=self.config.NUM_VALIDATION_IMAGES,
                 random_state=42,
                 stratify=train_y_lables)
-
+            log.info(
+                "-----SLITTING DATA INTO TRAINING VALIDATION & TESTING SET-----"
+            )
             split_set = dict(TRAINING=(train_x_paths, train_y_lables,
                                        self.config.TRAINING_DATUM_PATH),
                              VALIDATION=(val_x_paths, val_y_labels,
@@ -70,13 +80,17 @@ class HDF5DatumComposer:
         except Exception as e:
             raise e
 
-    def compose(self):
+    def compose(self, custom_split: dict = None):
         try:
 
             log.info("-----BUILDING HDF5 DATASET-----")
-            self.enconde_labels()
-            for set_type, (image_paths, labels,
-                           save_dir) in self.train_val_test_split().items():
+            log.info("----USING CUSTOM SPLIT---")
+            split = custom_split
+            if not custom_split:
+                log.info("----CUSTOM SPLIT NOT PROVIDED---")
+                log.info("----USING CONFIG SPLIT---")
+                split = self.train_val_test_split()
+            for set_type, (image_paths, labels, save_dir) in split.items():
                 condenser = FeatureCondenser(
                     (len(image_paths), self.preprocessing_height,
                      self.preprocessing_width, self.preprocessing_depth),
@@ -114,7 +128,7 @@ class HDF5DatumComposer:
                             GREEN=np.mean(self.green),
                             BLUE=np.mean(self.blue))
             log.info("-----WRITING MEAN RGB JSON FILE-----")
-            json_file = open(self.config.MEAN_RGB, "w")
+            json_file = open(self.config.MEAN_RGB_PATH, "w")
             json_file.write(json.dumps(mean_rgb))
             json_file.close()
         except TypeError:
