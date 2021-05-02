@@ -347,11 +347,6 @@ class NighGoogLeNet:
         l2_norm: float = 0.0005,
     ):
         try:
-            # KERNEL_1x1 = (1, 1)
-            # KERNEL_3x3 = (3, 3)
-            # KERNEL_5x5 = (5, 5)
-
-            ######################
 
             primary_cascade = NighGoogLeNet.convolution_slab(
                 inputs,
@@ -445,18 +440,6 @@ class NighGoogLeNet:
         l2_norm: float = 0.0005,
     ):
         try:
-            # KERNEL_1x1 = (1, 1)
-            # KERNEL_3x3 = (3, 3)
-            # KERNEL_5x5 = (5, 5)
-
-            # STRIDE_1x1 = (1, 1)
-            # STRIDE_2x2 = (2, 2)
-
-            # POOL_3x3 = (3, 3)
-            # POOL_4x4 = (4, 4)
-
-            # padding_same = "same"
-            # padding_valid = "valid"
 
             input_dim = (height, width, depth)
             channel_index = -1
