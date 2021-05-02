@@ -5,6 +5,7 @@ from keras.layers.normalization import BatchNormalization
 from keras import backend
 from keras.regularizers import l2
 from keras.layers import concatenate, Input
+from drig.config import Kernel, PoolSize, Stride, Padding
 
 
 class AlexNet:
