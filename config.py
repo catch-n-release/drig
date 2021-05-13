@@ -71,9 +71,9 @@ class TinyImageNetConfig:
     IMAGE_PREPROCESSING_WIDTH: int = 64
     IMAGE_PREPROCESSING_DEPTH: int = 3
 
-    EGRESS_PATH: str = "/Users/suyashsrivastava/drig/models/GoogeLeNet"
+    EGRESS_PATH: str = "/Users/suyashsrivastava/drig/models/NighGoogeLeNet"
     MODEL_PATH: str = os.path.join(EGRESS_PATH,
-                                   "checkpoints/tiny_imagenet_epoch_70.hdf5")
+                                   "model_tracks/tiny_imagenet_epoch_70.hdf5")
 
     PLOT_PATH: str = os.path.join(EGRESS_PATH, "tiny_imagenet.png")
     JSON_PATH: str = os.path.join(EGRESS_PATH, "tiny_imagenet.json")
