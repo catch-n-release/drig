@@ -61,8 +61,8 @@ class HDF5BatchComposer:
         except Exception as e:
             raise e
 
-    def lock(self):
+    def halt(self):
         try:
-            self.datum.lock()
+            self.datum.close()
         except Exception as e:
             raise e
