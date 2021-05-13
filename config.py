@@ -10,7 +10,7 @@ class DogsVsCatsConfig:
     DATASET_PATH: str = os.path.abspath(
         os.path.join(os.path.pardir, "datasets/kag_dogs_vs_cats"))
     TRAINING_IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
-
+    TRAINING_LABEL_INDEX: str = -3
     HDF5_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
     TRAINING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
                                             "training_datum.hdf5")
@@ -30,9 +30,8 @@ class DogsVsCatsConfig:
     EGRESS_PATH: str = os.path.abspath(
         os.path.join(os.path.pardir, "models/kag_dogs_vs_cats"))
     MODEL_PATH: str = os.path.join(EGRESS_PATH, "alexnet_dogs_vs_cats.model")
-    MEAN_RGB: str = os.path.join(DATASET_PATH, "dog_vs_cats_mean_rgb.json")
-    LABEL_FROM_PATH = lambda image_path: image_path.split("/")[-1].split(".")[0
-                                                                              ]
+    MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
+                                      "dog_vs_cats_mean_rgb.json")
 
 
 @dataclass(frozen=True)

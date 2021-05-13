@@ -99,7 +99,7 @@ class HDF5DatumComposer:
                     f"BUILDING {set_type} DATUM :",
                     progressbar.Percentage(),
                     " ",
-                    progressbar.Bar(marker="⎍"),
+                    progressbar.Bar(marker="❆"),
                     " ",
                     progressbar.SimpleProgress(),
                     " ",
@@ -112,25 +112,23 @@ class HDF5DatumComposer:
                             label) in enumerate(zip(image_paths, labels)):
 
                     image = cv2.imread(image_path)
-                    preprocessed_image = self.aspect_preprocessor.preprocess(
-                        image)
+                    image = self.aspect_preprocessor.preprocess(image)
                     if set_type == "TRAINING":
-                        b, g, r = cv2.mean(preprocessed_image)[:3]
+                        b, g, r = cv2.mean(image)[:3]
                         self.red.append(r)
                         self.green.append(g)
                         self.blue.append(b)
-                    condenser.commit([preprocessed_image], [label])
+                    condenser.commit([image], [label])
                     prog_bar.update(index)
 
             prog_bar.finish()
-            condenser.lock()
+            condenser.latch()
             mean_rgb = dict(RED=np.mean(self.red),
                             GREEN=np.mean(self.green),
                             BLUE=np.mean(self.blue))
             log.info("-----WRITING MEAN RGB JSON FILE-----")
-            json_file = open(self.config.MEAN_RGB_PATH, "w")
-            json_file.write(json.dumps(mean_rgb))
-            json_file.close()
+            with open(self.config.MEAN_RGB_PATH, "w") as json_file:
+                json_file.write(json.dumps(mean_rgb))
         except TypeError:
             log.exception("---ERROR: LABELS NOT ENCODED----")
         except Exception as e:
