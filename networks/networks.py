@@ -285,7 +285,7 @@ class TinyGoogLeNet:
             tensor = Dense(classes)(tensor)
             tensor = Activation("softmax")(tensor)
 
-            net = Model(inputs, tensor, name="TinyGoogLeNet")
+            net = Model(inputs, tensor, name="tiny_google_net")
 
             return net
 
@@ -301,7 +301,7 @@ class NighGoogLeNet:
         kernel: tuple,
         stride: tuple,
         channel_index: int,
-        padding: str = "same",
+        padding: str = Padding.SAME,
         l2_norm: float = 0.0005,
         alias: str = None,
     ):
@@ -407,7 +407,7 @@ class NighGoogLeNet:
             pooling_tensor = MaxPooling2D(
                 pool_size=PoolSize.MESH_3x3,
                 strides=stride,
-                padding="same",
+                padding=Padding.SAME,
                 name=f"{alias}_pooling_cascade_max_pool_layer")(inputs)
             pooling_cascade = NighGoogLeNet.convolution_slab(
                 pooling_tensor,
@@ -416,7 +416,8 @@ class NighGoogLeNet:
                 stride,
                 channel_index=channel_index,
                 l2_norm=l2_norm,
-                alias=f"{alias}_pooling_cascase_conv_slab")
+                alias=f"{alias}_pooling_cascase_conv_slab",
+            )
 
             inception_tensor = concatenate(
                 [
@@ -480,7 +481,7 @@ class NighGoogLeNet:
             tensor = NighGoogLeNet.convolution_slab(
                 tensor,
                 64,
-                Kernel.MESH_3x3,
+                Kernel.MESH_1x1,
                 Stride.MESH_1x1,
                 channel_index,
                 l2_norm=l2_norm,
@@ -500,7 +501,7 @@ class NighGoogLeNet:
             tensor = MaxPooling2D(
                 pool_size=PoolSize.MESH_3x3,
                 strides=Stride.MESH_2x2,
-                padding=PoolSize.SAME,
+                padding=Padding.SAME,
                 name="max_pool_2",
             )(tensor)
             '''
@@ -552,7 +553,7 @@ class NighGoogLeNet:
                 208,
                 16,
                 48,
-                74,
+                64,
                 channel_index,
                 alias="slab_4_inception_1",
                 l2_norm=l2_norm,
@@ -615,7 +616,7 @@ class NighGoogLeNet:
                 strides=Stride.MESH_2x2,
                 padding=Padding.SAME,
                 name="max_pool_4",
-            )
+            )(tensor)
             '''
 
             SLAB 5
@@ -639,10 +640,16 @@ class NighGoogLeNet:
                 name="classes",
             )(tensor)
 
-            net = Activation(
+            tensor = Activation(
                 "softmax",
-                name="softmax",
+                name="softmax_act",
             )(tensor)
+
+            net = Model(
+                inputs,
+                tensor,
+                name="nigh_google_net",
+            )
 
             #######################
 
