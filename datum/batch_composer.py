@@ -21,7 +21,7 @@ class HDF5BatchComposer:
             self.classes = classes
 
             self.datum = h5py.File(self.datum_path, mode="r")
-            self.num_data = self.datum["labels"].shape[0]
+            self.total_images = self.datum["labels"].shape[0]
         except Exception as e:
             raise e
 
@@ -29,29 +29,30 @@ class HDF5BatchComposer:
         try:
             epochs = 0
             while epochs < scans:
-                for i in np.arange(0, self.num_data, self.batch_size):
-                    images = self.datum["images"][i:i + self.batch_size]
-                    labels = self.datum["labels"][i:i + self.batch_size]
-                    # print(len(images))
+                for index in np.arange(0, self.total_images, self.batch_size):
+                    images = self.datum["images"][index:index +
+                                                  self.batch_size]
+                    labels = self.datum["labels"][index:index +
+                                                  self.batch_size]
+
                     if self.binarize:
                         labels = np_utils.to_categorical(labels, self.classes)
 
                     if self.preprocessors:
                         preprocessed_images = []
-                        #     preprocessor.preprocess(image) for image in images
-                        #     for preprocessor in self.preprocessors
-                        # ]
+
                         for image in images:
                             for preprocessor in self.preprocessors:
                                 image = preprocessor.preprocess(image)
                             preprocessed_images.append(image)
-                    # print(len(preprocessed_images))
-                        if len(images) != len(preprocessed_images):
-                            raise Exception("Error post image processing")
+
+                        assert len(images) == len(
+                            preprocessed_images), "Error post image processing"
+
                         images = np.array(preprocessed_images)
 
                     if self.data_augmenter:
-                        images, labels = next(
+                        (images, labels) = next(
                             self.data_augmenter.flow(
                                 images, labels, batch_size=self.batch_size))
 
