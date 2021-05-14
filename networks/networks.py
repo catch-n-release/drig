@@ -27,51 +27,76 @@ class AlexNet:
             # SLAB 1
             ########
             net.add(
-                Conv2D(96, (11, 11),
-                       strides=(4, 4),
-                       padding="same",
-                       input_shape=input_dim,
-                       kernel_regularizer=l2(l2_regularization)))
+                Conv2D(
+                    96,
+                    Kernel.MESH_11x11,
+                    strides=Stride.MESH_4x4,
+                    padding=Padding.SAME,
+                    input_shape=input_dim,
+                    kernel_regularizer=l2(l2_regularization),
+                ))
             net.add(Activation("relu"))
             net.add(BatchNormalization(axis=channel_index))
-            net.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+            net.add(
+                MaxPooling2D(
+                    pool_size=PoolSize.MESH_3x3,
+                    strides=Stride.MESH_2x2,
+                ))
             net.add(Dropout(0.25))
             ########
             # SLAB 2
             ########
             net.add(
-                Conv2D(256, (5, 5),
-                       padding="same",
-                       kernel_regularizer=l2(l2_regularization)))
+                Conv2D(
+                    256,
+                    Kernel.MESH_5x5,
+                    padding=Padding.SAME,
+                    kernel_regularizer=l2(l2_regularization),
+                ))
             net.add(Activation("relu"))
             net.add(BatchNormalization(axis=channel_index))
-            net.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+            net.add(
+                MaxPooling2D(
+                    pool_size=PoolSize.MESH_3x3,
+                    strides=Stride.MESH_2x2,
+                ))
             net.add(Dropout(0.25))
             #########
             # SLAB 3
             #########
             net.add(
-                Conv2D(384, (3, 3),
-                       padding="same",
-                       kernel_regularizer=l2(l2_regularization)))
+                Conv2D(
+                    384,
+                    Kernel.MESH_3x3,
+                    padding=Padding.SAME,
+                    kernel_regularizer=l2(l2_regularization),
+                ))
             net.add(Activation("relu"))
             net.add(BatchNormalization(axis=channel_index))
             ########
             net.add(
-                Conv2D(384, (3, 3),
-                       padding="same",
-                       kernel_regularizer=l2(l2_regularization)))
+                Conv2D(
+                    384,
+                    Kernel.MESH_3x3,
+                    padding=Padding.SAME,
+                    kernel_regularizer=l2(l2_regularization),
+                ))
             net.add(Activation("relu"))
             net.add(BatchNormalization(axis=channel_index))
             ########
             net.add(
-                Conv2D(256, (3, 3),
-                       padding="same",
-                       kernel_regularizer=l2(l2_regularization)))
+                Conv2D(
+                    256,
+                    Kernel.MESH_3x3,
+                    padding=Padding.SAME,
+                    kernel_regularizer=l2(l2_regularization),
+                ))
             net.add(Activation("relu"))
             net.add(BatchNormalization(axis=channel_index))
             ########
-            net.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
+            net.add(
+                MaxPooling2D(pool_size=PoolSize.MESH_3x3,
+                             strides=Stride.MESH_2x2), )
             net.add(Dropout(0.25))
             ########
             # SLAB 4
