@@ -83,6 +83,7 @@ class Kernel:
     MESH_1x1: tuple = (1, 1)
     MESH_3x3: tuple = (3, 3)
     MESH_5x5: tuple = (5, 5)
+    MESH_11x11: tuple = (11, 11)
 
 
 @dataclass(frozen=True)
@@ -97,6 +98,7 @@ class PoolSize:
 class Stride:
     MESH_1x1: tuple = (1, 1)
     MESH_2x2: tuple = (2, 2)
+    MESH_4x4: tuple = (4, 4)
 
 
 @dataclass(frozen=True)
