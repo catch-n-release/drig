@@ -70,12 +70,7 @@ class HDF5DatumComposer:
             log.info(
                 "-----SLITTING DATA INTO TRAINING VALIDATION & TESTING SET-----"
             )
-            log.info(f"TRAINING DATA {train_x_paths[:2]}")
-            log.info(f"TRAINING LABELS {train_y_lables[:2]}")
-            log.info(f"TESTING DATA {test_x_paths[:2]}")
-            log.info(f"TESTING LABELS {test_y_labels[:2]}")
-            log.info(f"VALIDATION DATA {val_x_paths[:2]}")
-            log.info(f"VALIDATION LABELS {val_y_labels[:2]}")
+
             split_set = dict(TRAINING=(train_x_paths, train_y_lables,
                                        self.config.TRAINING_DATUM_PATH),
                              VALIDATION=(val_x_paths, val_y_labels,
