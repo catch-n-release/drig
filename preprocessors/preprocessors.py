@@ -83,11 +83,11 @@ class NormalizationPreprocessor:
 
     def preprocess(self, image):
         try:
-            blue_channel, green_channel, red_channel = cv2.split(
-                image.astype("float32"))
+            (blue_channel, green_channel,
+             red_channel) = cv2.split(image.astype("float32"))
             blue_channel -= self.mean_blue
             green_channel -= self.mean_green
-            red_channel -= red_channel - self.mean_red
+            red_channel -= self.mean_red
 
             return cv2.merge([blue_channel, green_channel, red_channel])
         except Exception as e:
