@@ -79,7 +79,7 @@ class FeatureExtractor:
                 "Extracting Features: ",
                 progressbar.Percentage(),
                 " ",
-                progressbar.Bar(marker="⎍"),
+                progressbar.Bar(marker="❆"),
                 " ",
                 progressbar.SimpleProgress(),
                 " ",
