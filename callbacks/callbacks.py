@@ -17,6 +17,8 @@ class LossAccuracyTracker(BaseLogger):
 
         self.plot_image_path = plot_image_path
         self.json_path = json_path
+        os.makedirs(os.path.dirname(self.plot_image_path), exist_ok=True)
+        os.makedirs(os.path.dirname(self.json_path), exist_ok=True)
         self.starting_epoch = starting_epoch
 
     def on_train_begin(self, logs=dict()):
