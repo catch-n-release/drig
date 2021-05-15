@@ -25,7 +25,7 @@ class DatumLoader:
                 "Loading Images :",
                 progressbar.Percentage(),
                 " ",
-                progressbar.Bar(marker="⎍"),
+                progressbar.Bar(marker="❆"),
                 " ",
                 progressbar.SimpleProgress(),
                 " ",
