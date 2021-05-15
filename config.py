@@ -18,6 +18,8 @@ class DogsVsCatsConfig:
                                               "validation_datum.hdf5")
     TESTING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
                                            "testing_datum.hdf5")
+    MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
+                                      "dog_vs_cats_mean_rgb.json")
 
     NUM_CLASSES: int = 2
     NUM_VALIDATION_IMAGES: int = 1250 * NUM_CLASSES
@@ -27,11 +29,19 @@ class DogsVsCatsConfig:
     IMAGE_PREPROCESSING_WIDTH: int = 256
     IMAGE_PREPROCESSING_DEPTH: int = 3
 
+    BATCH_SIZE = 64
+    ALPHA = 1e-4
+    EPOCHS = 75
+
     EGRESS_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "models/kag_dogs_vs_cats"))
-    MODEL_PATH: str = os.path.join(EGRESS_PATH, "alexnet_dogs_vs_cats.model")
-    MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
-                                      "dog_vs_cats_mean_rgb.json")
+        os.path.join(os.path.pardir, "models/AlexNet"))
+    MODEL_PATH: str = os.path.join(
+        EGRESS_PATH, f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.model")
+
+    PLOT_PATH: str = os.path.join(
+        EGRESS_PATH, f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.png")
+    JSON_PATH: str = os.path.join(
+        EGRESS_PATH, f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.json")
 
 
 @dataclass(frozen=True)
@@ -43,7 +53,8 @@ class AlexNetImage:
 
 @dataclass(frozen=True)
 class TinyImageNetConfig:
-    DATASET_PATH: str = "/Users/suyashsrivastava/drig/datasets/tiny-imagenet-200"
+    DATASET_PATH: str = os.path.abspath(
+        os.path.join(os.path.pardir, "datasets/tiny-imagenet-200"))
 
     TRAINING_IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
     TRAINING_LABEL_INDEX: str = -4
@@ -73,7 +84,6 @@ class TinyImageNetConfig:
     EGRESS_PATH: str = "/Users/suyashsrivastava/drig/models/NighGoogeLeNet"
     MODEL_PATH: str = os.path.join(EGRESS_PATH,
                                    "model_tracks/tiny_imagenet_epoch_70.hdf5")
-
     PLOT_PATH: str = os.path.join(EGRESS_PATH, "tiny_imagenet.png")
     JSON_PATH: str = os.path.join(EGRESS_PATH, "tiny_imagenet.json")
 
