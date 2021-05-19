@@ -243,12 +243,12 @@ def plot_network(net):
         raise e
 
 
-def compose_image_collage(
+def compose_image_collages(
     images_path: str,
     collage_dim: tuple,
     indices: list,
     output_path: str = None,
-    normalize_data=False,
+    normalize_data=True,
 ):
     try:
         collage_images = list()
@@ -276,9 +276,10 @@ def compose_image_collage(
             collage_canvas[
                 resize_image_height:collage_dim[0],
                 resize_image_width:collage_dim[1]] = images_per_class[0]
-            os.makedirs(output_path, exist_ok=True)
-            cv2.imwrite(os.path.join(output_path, f"{class_index}.png"),
-                        collage_canvas)
+            if output_path:
+                os.makedirs(output_path, exist_ok=True)
+                cv2.imwrite(os.path.join(output_path, f"{class_index}.png"),
+                            collage_canvas)
             collage_images.append(collage_canvas)
         collage_images = np.array(collage_images)
 
