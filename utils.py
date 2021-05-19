@@ -16,10 +16,15 @@ from PIL import ImageFont
 import os
 from drig.config import logging as log
 import json
+import glob
 
 
-def display_image(image):
+def display_image(image_path: str = None, image: np.ndarray = None):
     try:
+
+        if image_path:
+            image = cv2.imread(image)
+            assert image, "INVALID IMAGE PATH"
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
         raise e
@@ -234,5 +239,46 @@ def plot(
 def plot_network(net):
     try:
         return plot_model(net, show_dtype=True, show_shapes=True)
+    except Exception as e:
+        raise e
+
+
+def compose_image_collage(
+    images_path: str,
+    collage_dim: tuple,
+    indices: list,
+    output_path: str = None,
+):
+    try:
+        collage_images = list()
+        for index in indices:
+            class_index = index + 1
+            class_root_path = os.path.join(images_path, f"{class_index}_*.jpg")
+            class_image_paths = sorted(list(glob.glob(class_root_path)))
+            collage_canvas = np.zeros(collage_dim, dtype="uint8")
+            images_per_dim = (len(class_image_paths) // 2)
+            resize_image_height = collage_dim[0] // images_per_dim
+            resize_image_width = collage_dim[1] // images_per_dim
+            images_per_class = list()
+            for image_path in class_image_paths:
+                image = cv2.imread(image_path)
+                image = cv2.resize(image,
+                                   (resize_image_height, resize_image_width))
+                images_per_class.append(image)
+            collage_canvas[0:resize_image_height,
+                           0:resize_image_width] = images_per_class[2]
+            collage_canvas[
+                0:resize_image_height,
+                resize_image_width:collage_dim[1]] = images_per_class[3]
+            collage_canvas[resize_image_height:collage_dim[0],
+                           0:resize_image_width] = images_per_class[1]
+            collage_canvas[
+                resize_image_height:collage_dim[0],
+                resize_image_width:collage_dim[1]] = images_per_class[0]
+            os.makedirs(output_path, exist_ok=True)
+            cv2.imwrite(os.path.join(output_path, f"{class_index}.png"),
+                        collage_canvas)
+            collage_images.append(collage_canvas)
+        return np.array(collage_images)
     except Exception as e:
         raise e
