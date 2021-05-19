@@ -116,3 +116,10 @@ class Stride:
 class Padding:
     SAME: str = "same"
     VALID: str = "valid"
+
+
+@dataclass(frozen=True)
+class Trigger:
+    RELU: str = "relu"
+    SOFTMAX: str = "softmax"
+    LINEAR: str = "linear"
