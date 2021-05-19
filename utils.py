@@ -248,6 +248,7 @@ def compose_image_collage(
     collage_dim: tuple,
     indices: list,
     output_path: str = None,
+    normalize_data=False,
 ):
     try:
         collage_images = list()
@@ -279,6 +280,11 @@ def compose_image_collage(
             cv2.imwrite(os.path.join(output_path, f"{class_index}.png"),
                         collage_canvas)
             collage_images.append(collage_canvas)
-        return np.array(collage_images)
+        collage_images = np.array(collage_images)
+
+        if normalize_data:
+            collage_images = collage_images / 255.0
+
+        return collage_images
     except Exception as e:
         raise e
