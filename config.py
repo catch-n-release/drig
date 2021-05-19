@@ -99,6 +99,7 @@ class Kernel:
 @dataclass(frozen=True)
 class PoolSize:
     MESH_1x1: tuple = (1, 1)
+    MESH_2x2: tuple = (2, 2)
     MESH_3x3: tuple = (3, 3)
     MESH_4x4: tuple = (4, 4)
     MESH_5x5: tuple = (5, 5)
