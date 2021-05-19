@@ -9,12 +9,12 @@ from drig.config import Kernel, PoolSize, Padding, Trigger
 class CustomNet:
     @staticmethod
     def compose(
-        height: int,
-        width: int,
-        depth: int,
-        classes: int = None,
-        filters: list = [16, 32, 64],
-        regressor: bool = False,
+            height: int,
+            width: int,
+            depth: int,
+            classes: int = None,
+            filters: list = (16, 32, 64),
+            regressor: bool = False,
     ):
         try:
             input_dim = (height, width, depth)
