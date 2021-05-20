@@ -9,25 +9,24 @@ import os
 
 
 class FeatureExtractor:
-    def __init__(self,
-                 feature_datum_path: str,
-                 label_index: int,
-                 network,
-                 image_datum_path: str = None,
-                 net_input_dim: tuple = (224, 224),
-                 batch_size: int = 64,
-                 buffer_size: int = 1000,
-                 shuffle: bool = True,
-                 image_net: bool = True,
-                 image_paths: list = None):
+    def __init__(
+        self,
+        feature_datum_path: str,
+        label_index: int,
+        network,
+        image_datum_path: str = None,
+        net_input_dim: tuple = (224, 224),
+        batch_size: int = 64,
+        buffer_size: int = 1000,
+        shuffle: bool = True,
+        preprocessor: object = None,
+        image_net: bool = True,
+        image_paths: list = None,
+    ):
         try:
             self.image_datum_path = image_datum_path if not image_paths else None
             self.feature_datum_path = feature_datum_path
             self.label_index = label_index
-            self.feature_dir = str("/").join(
-                self.feature_datum_path.split("/")[:-1])
-            if not os.path.exists(self.feature_dir):
-                os.makedirs(self.feature_dir)
             self.batch_size = batch_size
             self.buffer_size = buffer_size
             self.net = network
@@ -36,13 +35,20 @@ class FeatureExtractor:
                                     ) if self.image_datum_path else image_paths
 
             self.num_images = len(self.image_paths)
+            self.preprocessor = preprocessor
             self.image_net = image_net
             if shuffle:
                 np.random.shuffle(self.image_paths)
-            self.feature_size = FeatureExtractor.feature_size(
-                self.net, np.random.choice(self.image_paths),
-                self.net_input_dim, self.image_net)
-
+            self.feature_size = FeatureExtractor.unit_image_feature(
+                self.net,
+                np.random.choice(self.image_paths),
+                self.net_input_dim,
+                self.preprocessor,
+                self.image_net,
+                return_feature_size=True,
+            )
+            os.makedirs(os.path.dirname(self.feature_datum_path),
+                        exist_ok=True)
         except Exception as e:
             raise e
 
