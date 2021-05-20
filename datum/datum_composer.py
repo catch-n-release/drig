@@ -123,7 +123,7 @@ class HDF5DatumComposer:
                     prog_bar.update(index)
 
             prog_bar.finish()
-            condenser.latch()
+            condenser.seal()
             mean_rgb = dict(RED=np.mean(self.red),
                             GREEN=np.mean(self.green),
                             BLUE=np.mean(self.blue))

@@ -53,7 +53,7 @@ class FeatureCondenser:
         except Exception as e:
             raise e
 
-    def latch(self):
+    def seal(self):
         try:
             if len(self.buffer.get("data")) > 0:
                 self.push()
