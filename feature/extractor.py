@@ -65,7 +65,10 @@ class FeatureExtractor:
         except Exception as e:
             raise e
 
-    def condeser_features(self, group_name: str):
+    def condeser_features(
+        self,
+        group_name: str,
+    ):
         try:
             feature_datum = FeatureCondenser(
                 (self.num_images, self.feature_size),
@@ -77,7 +80,10 @@ class FeatureExtractor:
         except Exception as e:
             raise e
 
-    def extract_features(self, group_name: str = "features"):
+    def extract_features(
+        self,
+        group_name: str = "features",
+    ):
         try:
             self.encode_labels()
             feature_datum = self.condeser_features(group_name)
@@ -100,7 +106,11 @@ class FeatureExtractor:
                 batch_images = list()
                 for image_path in batch_image_paths:
                     image_for_prediction = FeatureExtractor.preprocess_image(
-                        image_path, self.net_input_dim, self.image_net)
+                        image_path,
+                        self.net_input_dim,
+                        self.preprocessor,
+                        self.image_net,
+                    )
                     batch_images.append(image_for_prediction)
 
                 batch_images = np.vstack(batch_images)
@@ -112,33 +122,46 @@ class FeatureExtractor:
 
                 feature_datum.commit(batch_features, batch_labels)
                 prog_bar.update(index)
-            feature_datum.lock()
+            feature_datum.seal()
             prog_bar.finish()
         except Exception as e:
             raise e
 
     @staticmethod
-    def preprocess_image(image_path, net_input_dim, image_net: bool = True):
+    def preprocess_image(
+        image_path,
+        net_input_dim,
+        preprocessor: object = None,
+        image_net: bool = True,
+    ):
         try:
             image = load_img(image_path, target_size=net_input_dim)
             image = img_to_array(image)
             image = np.expand_dims(image, axis=0)
-            if image_net:
+            if preprocessor:
+                image = preprocessor.preprocess_input(image)
+            elif image_net:
                 image = imagenet_utils.preprocess_input(image)
             return image
         except Exception as e:
             raise e
 
     @staticmethod
-    def feature_size(net,
-                     image_path: str,
-                     net_input_dim: tuple,
-                     image_net: bool = True):
+    def unit_image_feature(
+        net,
+        image_path: str,
+        net_input_dim: tuple,
+        preprocessor: object = None,
+        image_net: bool = True,
+        return_feature_size: bool = False,
+    ):
         try:
             image_for_prediction = FeatureExtractor.preprocess_image(
-                image_path, net_input_dim, image_net)
+                image_path, net_input_dim, preprocessor, image_net)
             feature_vector = net.predict(image_for_prediction)
-            feature_vector_size = np.prod(feature_vector.shape[1:])
-            return feature_vector_size
+            if return_feature_size:
+                feature_vector_size = np.prod(feature_vector.shape[1:])
+                return feature_vector_size
+            return feature_vector
         except Exception as e:
             raise e
