@@ -14,7 +14,7 @@ class MultiLayerPerceptron:
         ))
         net.add(Activation(Trigger.RELU))
         net.add(Dense(4))
-        net.add(Activation(Trigger))
+        net.add(Activation(Trigger.RELU))
 
         if regressor:
             net.add(Dense(1))
