@@ -45,8 +45,7 @@ class FeatureExtractor:
                 self.net_input_dim,
                 self.preprocessor,
                 self.image_net,
-                return_feature_size=True,
-            )
+            ).shape[1]
             os.makedirs(os.path.dirname(self.feature_datum_path),
                         exist_ok=True)
         except Exception as e:
