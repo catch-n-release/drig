@@ -85,7 +85,7 @@ class FeatureExtractor:
     ):
         try:
             self.encode_labels()
-            feature_datum = self.condeser_features(group_name)
+            feature_datum = self.feature_condenser(group_name)
             widgets = [
                 "Extracting Features: ",
                 progressbar.Percentage(),
@@ -101,7 +101,8 @@ class FeatureExtractor:
             for index in np.arange(0, self.num_images, self.batch_size):
                 batch_image_paths = self.image_paths[index:index +
                                                      self.batch_size]
-                batch_labels = self.labels[index:index + self.batch_size]
+                batch_labels = self.encoded_labels[index:index +
+                                                   self.batch_size]
                 batch_images = list()
                 for image_path in batch_image_paths:
                     image_for_prediction = FeatureExtractor.preprocess_image(
@@ -152,15 +153,15 @@ class FeatureExtractor:
         net_input_dim: tuple,
         preprocessor: object = None,
         image_net: bool = True,
-        return_feature_size: bool = False,
     ):
         try:
             image_for_prediction = FeatureExtractor.preprocess_image(
                 image_path, net_input_dim, preprocessor, image_net)
-            feature_vector = net.predict(image_for_prediction)
-            if return_feature_size:
-                feature_vector_size = np.prod(feature_vector.shape[1:])
-                return feature_vector_size
+            raw_feature_vector = net.predict(image_for_prediction)
+            feature_vector_size = np.prod(raw_feature_vector.shape[1:])
+            feature_vector = raw_feature_vector.reshape(
+                raw_feature_vector.shape[0], feature_vector_size)
+
             return feature_vector
         except Exception as e:
             raise e
