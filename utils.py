@@ -23,8 +23,8 @@ def display_image(image_path: str = None, image: np.ndarray = None):
     try:
 
         if image_path:
-            image = cv2.imread(image)
-            assert image, "INVALID IMAGE PATH"
+            image = cv2.imread(image_path)
+            assert type(image) == np.ndarray, "INVALID IMAGE PATH"
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
         raise e
@@ -99,10 +99,9 @@ def matplotlib_plot(plot_values, callback, inline, save_path):
 
 def display_prediction(image_path, prediction, class_labels):
     try:
-        return display_image(
-            cv2.putText(cv2.imread(image_path),
-                        f"Label: {class_labels[prediction[0]]}", (10, 30),
-                        cv2.FONT_HERSHEY_COMPLEX, 0.7, (0, 255, 0), 2))
+        return display_image(image=cv2.putText(
+            cv2.imread(image_path), f"Label: {class_labels[prediction[0]]}",
+            (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0, 255, 0), 2), )
     except Exception as e:
         raise e
 
