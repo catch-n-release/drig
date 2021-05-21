@@ -59,14 +59,14 @@ class FeatureExtractor:
                 for image_path in self.image_paths
             ]
             label_encoder = LabelEncoder()
-            self.labels = label_encoder.fit_transform(self.labels)
+            self.encoded_labels = label_encoder.fit_transform(self.labels)
             self.classes = label_encoder.classes_
         except Exception as e:
             raise e
 
-    def condeser_features(
+    def feature_condenser(
         self,
-        group_name: str,
+        group_name: str = "features",
     ):
         try:
             feature_datum = FeatureCondenser(
