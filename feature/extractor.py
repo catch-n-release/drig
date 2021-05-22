@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from keras.applications import imagenet_utils
 from keras.preprocessing.image import load_img, img_to_array
+from drig.utils import log
 import os
 
 
@@ -15,12 +16,12 @@ class FeatureExtractor:
         label_index: int,
         network,
         image_datum_path: str = None,
-        net_input_dim: tuple = (224, 224),
+        net_input_dim: tuple = None,
         batch_size: int = 64,
         buffer_size: int = 1600,
         shuffle: bool = True,
         preprocessor: object = None,
-        image_net: bool = True,
+        image_net: bool = False,
         image_paths: list = None,
     ):
         try:
@@ -53,6 +54,7 @@ class FeatureExtractor:
 
     def encode_labels(self):
         try:
+            log.info("ENCODING LABELS")
             self.labels = [
                 image_path.replace(".", " ").replace(
                     "/", " ").split(" ")[self.label_index]
@@ -61,6 +63,7 @@ class FeatureExtractor:
             label_encoder = LabelEncoder()
             self.encoded_labels = label_encoder.fit_transform(self.labels)
             self.classes = label_encoder.classes_
+            log.info(f"CLASSES : {len(self.classes)}")
         except Exception as e:
             raise e
 
@@ -69,6 +72,7 @@ class FeatureExtractor:
         group_name: str = "features",
     ):
         try:
+            log.info("INITIALZING FEATURE CONDENSER")
             feature_datum = FeatureCondenser(
                 (self.num_images, self.feature_size),
                 self.feature_datum_path,
@@ -130,9 +134,9 @@ class FeatureExtractor:
     @staticmethod
     def preprocess_image(
         image_path,
-        net_input_dim,
+        net_input_dim: tuple = None,
         preprocessor: object = None,
-        image_net: bool = True,
+        image_net: bool = False,
     ):
         try:
             image = load_img(image_path, target_size=net_input_dim)
@@ -150,9 +154,9 @@ class FeatureExtractor:
     def unit_image_feature(
         net,
         image_path: str,
-        net_input_dim: tuple,
+        net_input_dim: tuple = None,
         preprocessor: object = None,
-        image_net: bool = True,
+        image_net: bool = False,
     ):
         try:
             image_for_prediction = FeatureExtractor.preprocess_image(
