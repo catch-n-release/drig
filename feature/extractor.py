@@ -17,7 +17,7 @@ class FeatureExtractor:
         image_datum_path: str = None,
         net_input_dim: tuple = (224, 224),
         batch_size: int = 64,
-        buffer_size: int = 1600,
+        buffer_size: int = 1000,
         shuffle: bool = True,
         preprocessor: object = None,
         image_net: bool = True,
