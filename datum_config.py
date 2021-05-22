@@ -90,8 +90,8 @@ class CALTECH101Config:
     VGG16_FEATURE_DATUM_PATH: str = os.path.join(FEATURE_DATASET_DIR_PATH,
                                                  "VGG16_features.hdf5")
 
-    BATCH_SIZE: int = 128
-    BUFFER_SIZE: int = 2000
+    BATCH_SIZE: int = 64
+    BUFFER_SIZE: int = 1600
     TRAIN_SIZE: float = 0.75
     PARAM_MESH: Dict[str, list] = field(default_factory=lambda: (dict(
         C=[0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0])))
