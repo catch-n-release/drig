@@ -106,7 +106,7 @@ def display_prediction(image_path, prediction, class_labels):
         raise e
 
 
-def get_ranked_accuracies(predictions, labels):
+def ranked_accuracies(predictions, labels):
     try:
         rank_one_accuracy = 0
         rank_five_accuracy = 0
@@ -286,5 +286,14 @@ def compose_image_collages(
             collage_images = collage_images / 255.0
 
         return collage_images
+    except Exception as e:
+        raise e
+
+
+def image_dim(image_path):
+    try:
+        image = cv2.imread(image_path)
+        assert type(image) == np.ndarray, "INVALID IMAGE PATH"
+        return image.shape
     except Exception as e:
         raise e
