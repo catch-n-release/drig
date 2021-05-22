@@ -17,7 +17,7 @@ class FeatureExtractor:
         image_datum_path: str = None,
         net_input_dim: tuple = (224, 224),
         batch_size: int = 64,
-        buffer_size: int = 1000,
+        buffer_size: int = 1600,
         shuffle: bool = True,
         preprocessor: object = None,
         image_net: bool = True,
@@ -45,7 +45,8 @@ class FeatureExtractor:
                 self.net_input_dim,
                 self.preprocessor,
                 self.image_net,
-            ).shape[1]
+                return_feature_size=True,
+            )
             os.makedirs(os.path.dirname(self.feature_datum_path),
                         exist_ok=True)
         except Exception as e:
@@ -59,14 +60,14 @@ class FeatureExtractor:
                 for image_path in self.image_paths
             ]
             label_encoder = LabelEncoder()
-            self.encoded_labels = label_encoder.fit_transform(self.labels)
+            self.labels = label_encoder.fit_transform(self.labels)
             self.classes = label_encoder.classes_
         except Exception as e:
             raise e
 
-    def feature_condenser(
+    def condeser_features(
         self,
-        group_name: str = "features",
+        group_name: str,
     ):
         try:
             feature_datum = FeatureCondenser(
@@ -85,7 +86,7 @@ class FeatureExtractor:
     ):
         try:
             self.encode_labels()
-            feature_datum = self.feature_condenser(group_name)
+            feature_datum = self.condeser_features(group_name)
             widgets = [
                 "Extracting Features: ",
                 progressbar.Percentage(),
@@ -101,8 +102,7 @@ class FeatureExtractor:
             for index in np.arange(0, self.num_images, self.batch_size):
                 batch_image_paths = self.image_paths[index:index +
                                                      self.batch_size]
-                batch_labels = self.encoded_labels[index:index +
-                                                   self.batch_size]
+                batch_labels = self.labels[index:index + self.batch_size]
                 batch_images = list()
                 for image_path in batch_image_paths:
                     image_for_prediction = FeatureExtractor.preprocess_image(
@@ -153,15 +153,15 @@ class FeatureExtractor:
         net_input_dim: tuple,
         preprocessor: object = None,
         image_net: bool = True,
+        return_feature_size: bool = False,
     ):
         try:
             image_for_prediction = FeatureExtractor.preprocess_image(
                 image_path, net_input_dim, preprocessor, image_net)
-            raw_feature_vector = net.predict(image_for_prediction)
-            feature_vector_size = np.prod(raw_feature_vector.shape[1:])
-            feature_vector = raw_feature_vector.reshape(
-                raw_feature_vector.shape[0], feature_vector_size)
-
+            feature_vector = net.predict(image_for_prediction)
+            if return_feature_size:
+                feature_vector_size = np.prod(feature_vector.shape[1:])
+                return feature_vector_size
             return feature_vector
         except Exception as e:
             raise e
