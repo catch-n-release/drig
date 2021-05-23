@@ -17,6 +17,7 @@ import os
 from drig.config import logging as log
 import json
 import glob
+from sklearn.metrics import multilabel_confusion_matrix
 
 
 def display_image(image_path: str = None, image: np.ndarray = None):
