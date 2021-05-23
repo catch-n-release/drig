@@ -145,3 +145,6 @@ class Faces94:
         C=[0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0])))
     CV: int = 3
     JOBS: int = -1
+
+    EGRESS_PATH: str = os.path.abspath(
+        os.path.join(os.path.pardir, "models/VGGFace"))
