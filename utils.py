@@ -31,13 +31,15 @@ def display_image(image_path: str = None, image: np.ndarray = None):
         raise e
 
 
-def plot_training_metrics(model_training_history=None,
-                          epochs: int = None,
-                          json_path: str = None,
-                          save_path: str = None,
-                          use_matplotlib: bool = False,
-                          callback: bool = False,
-                          inline: bool = False):
+def plot_training_metrics(
+    model_training_history=None,
+    epochs: int = None,
+    json_path: str = None,
+    save_path: str = None,
+    use_matplotlib: bool = False,
+    callback: bool = False,
+    inline: bool = False,
+):
     try:
 
         if json_path:
@@ -76,7 +78,12 @@ def plot_training_metrics(model_training_history=None,
         raise e
 
 
-def matplotlib_plot(plot_values, callback, inline, save_path):
+def matplotlib_plot(
+    plot_values,
+    callback,
+    inline,
+    save_path,
+):
     try:
         x_axis, *loss_accuracy_value_list = plot_values
         y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy = loss_accuracy_value_list
@@ -98,7 +105,11 @@ def matplotlib_plot(plot_values, callback, inline, save_path):
         raise e
 
 
-def display_prediction(image_path, prediction, class_labels):
+def display_prediction(
+    image_path,
+    prediction,
+    class_labels,
+):
     try:
         return display_image(image=cv2.putText(
             cv2.imread(image_path), f"Label: {class_labels[prediction[0]]}",
@@ -128,11 +139,13 @@ def ranked_accuracies(predictions, labels):
         raise e
 
 
-def visualize_network(model,
-                      scale_xy: int = 2,
-                      spacing: int = 10,
-                      scale_z=0.1,
-                      save_image_path: str = None):
+def visualize_network(
+    model,
+    scale_xy: int = 2,
+    spacing: int = 10,
+    scale_z=0.1,
+    save_image_path: str = None,
+):
     try:
         font = ImageFont.truetype(
             "/System/Library/Fonts/Supplemental/Skia.ttf", 16)
@@ -159,7 +172,10 @@ def visualize_network(model,
         raise e
 
 
-def display_image_data(image_datum_path: str, image_dim: tuple = None):
+def display_image_data(
+    image_datum_path: str,
+    image_dim: tuple = None,
+):
     try:
         if not os.path.exists(image_datum_path):
             raise Exception(f"Invalid Path : {image_datum_path}")
@@ -174,7 +190,10 @@ def display_image_data(image_datum_path: str, image_dim: tuple = None):
         raise e
 
 
-def draw_faces(image, faces):
+def draw_faces(
+    image,
+    faces,
+):
     try:
         _ = [
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 1)
