@@ -310,10 +310,51 @@ def compose_image_collages(
         raise e
 
 
-def image_dim(image_path):
+def image_dim(image_path: str):
     try:
         image = cv2.imread(image_path)
         assert type(image) == np.ndarray, "INVALID IMAGE PATH"
         return image.shape
+    except Exception as e:
+        raise e
+
+
+def image_class(
+    image_path: str,
+    label_index: int,
+):
+    try:
+        class_name = image_path.replace(".", " ").replace(
+            "/", " ").split(" ")[label_index]
+        return class_name
+    except Exception as e:
+        raise e
+
+
+def confusion_mesh(
+    tenets: np.ndarray,
+    predictions: np.ndarray,
+    encoded_classes: np.ndarray,
+    class_name: str = None,
+    class_index: int = None,
+    classes: np.ndarray = None,
+):
+    try:
+        confusion_mesh = multilabel_confusion_matrix(
+            tenets,
+            predictions,
+            labels=encoded_classes,
+        )
+        if class_index:
+            class_confusion_mesh = confusion_mesh[class_index]
+            if classes:
+                class_name = classes[class_index]
+                return class_confusion_mesh, class_name
+            return class_confusion_mesh
+        elif class_name and classes:
+            class_confusion_mesh = confusion_mesh[list(classes).index(
+                class_name)]
+            return class_confusion_mesh
+        return confusion_mesh
     except Exception as e:
         raise e
