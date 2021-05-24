@@ -334,11 +334,11 @@ def image_dim(image_path: str):
 
 def image_class(
     image_path: str,
-    label_index: int,
+    class_index: int,
 ):
     try:
         class_name = image_path.replace(".", " ").replace(
-            "/", " ").split(" ")[label_index]
+            "/", " ").split(" ")[class_index]
         return class_name
     except Exception as e:
         raise e
@@ -384,13 +384,15 @@ def plot_confusion_mesh(
         truth_values = ["TRUE", "FALSE"]
 
         scaled_values = np.sort(
-            np.interp(confusion_mesh,
-                      (confusion_mesh.min(), confusion_mesh.max()),
-                      (0, +1)).reshape(1, -1)).squeeze().tolist()
+            np.interp(
+                confusion_mesh,
+                (confusion_mesh.min(), confusion_mesh.max()),
+                (0, +1),
+            ).reshape(1, -1)).squeeze().tolist()
         colors = ["#876a96", "#5e366a", "#815e94", "#694b7c"]
         custom_color_scale = list(zip(scaled_values, colors))
 
-        mesh_title = f"<i><b>{class_name} CONFUSION MATRIX</b></i>"
+        mesh_title = f"<i><b>CONFUSION MATRIX</b></i> : {class_name}"
         fig = ff.create_annotated_heatmap(
             confusion_mesh,
             x=truth_values,
@@ -402,10 +404,42 @@ def plot_confusion_mesh(
         fig.update_layout(
             title_text=mesh_title,
             xaxis=dict(title="TRUE VALUE"),
-            yaxis=dict(title="PREDICTED VALUE",
-                       categoryorder='category ascending'),
+            yaxis=dict(
+                title="PREDICTED VALUE",
+                categoryorder='category ascending',
+            ),
         )
         fig.show()
 
+    except Exception as e:
+        raise e
+
+
+def list_image_paths(dataset_path: str = None):
+    try:
+        all_image_paths = list(paths.list_images(dataset_path))
+        return all_image_paths
+    except Exception as e:
+        raise e
+
+
+def random_image(
+    dataset_path: str = None,
+    image_paths: list = None,
+    class_index: int = None,
+):
+    try:
+        if dataset_path:
+            all_image_paths = list_image_paths(dataset_path)
+        elif image_paths:
+            all_image_paths = image_paths
+        random_image_path = np.random.choice(all_image_paths)
+        if class_index:
+            class_name = image_class(
+                random_image_path,
+                class_index,
+            )
+            return random_image_path, class_name
+        return random_image_path
     except Exception as e:
         raise e
