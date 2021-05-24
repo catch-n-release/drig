@@ -13,7 +13,7 @@ class FeatureExtractor:
     def __init__(
         self,
         feature_datum_path: str,
-        label_index: int,
+        class_index: int,
         network,
         image_datum_path: str = None,
         net_input_dim: tuple = None,
@@ -27,7 +27,7 @@ class FeatureExtractor:
         try:
             self.image_datum_path = image_datum_path if not image_paths else None
             self.feature_datum_path = feature_datum_path
-            self.label_index = label_index
+            self.class_index = class_index
             self.batch_size = batch_size
             self.buffer_size = buffer_size
             self.net = network
@@ -57,7 +57,7 @@ class FeatureExtractor:
             log.info("ENCODING LABELS")
             self.labels = [
                 image_path.replace(".", " ").replace(
-                    "/", " ").split(" ")[self.label_index]
+                    "/", " ").split(" ")[self.class_index]
                 for image_path in self.image_paths
             ]
             label_encoder = LabelEncoder()
