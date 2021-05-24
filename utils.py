@@ -18,6 +18,7 @@ from drig.config import logging as log
 import json
 import glob
 from sklearn.metrics import multilabel_confusion_matrix
+import plotly.figure_factory as ff
 
 
 def display_image(image_path: str = None, image: np.ndarray = None):
@@ -160,14 +161,16 @@ def visualize_network(
         color_map[BatchNormalization]['fill'] = '#BDC3C7'
         color_map[AveragePooling2D]['fill'] = '#4EACF2'
         color_map[Concatenate]['fill'] = "#4A235A"
-        return visualkeras.layered_view(model,
-                                        color_map=color_map,
-                                        font=font,
-                                        legend=True,
-                                        scale_xy=scale_xy,
-                                        spacing=spacing,
-                                        to_file=save_image_path,
-                                        scale_z=scale_z)
+        return visualkeras.layered_view(
+            model,
+            color_map=color_map,
+            font=font,
+            legend=True,
+            scale_xy=scale_xy,
+            spacing=spacing,
+            to_file=save_image_path,
+            scale_z=scale_z,
+        )
     except Exception as e:
         raise e
 
@@ -217,33 +220,43 @@ def plot(
         y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy = loss_accuracy_value_list
         fig = graph.Figure()
         fig.add_trace(
-            graph.Scatter(x=x_axis,
-                          y=y_training_loss,
-                          mode='lines',
-                          name='Training Loss'))
+            graph.Scatter(
+                x=x_axis,
+                y=y_training_loss,
+                mode='lines',
+                name='Training Loss',
+            ))
         fig.add_trace(
-            graph.Scatter(x=x_axis,
-                          y=y_validation_loss,
-                          mode='lines',
-                          name='Validation Loss'))
+            graph.Scatter(
+                x=x_axis,
+                y=y_validation_loss,
+                mode='lines',
+                name='Validation Loss',
+            ))
         fig.add_trace(
-            graph.Scatter(x=x_axis,
-                          y=y_training_accuracy,
-                          mode='lines',
-                          name='Training Accuracy'))
+            graph.Scatter(
+                x=x_axis,
+                y=y_training_accuracy,
+                mode='lines',
+                name='Training Accuracy',
+            ))
         fig.add_trace(
-            graph.Scatter(x=x_axis,
-                          y=y_validation_accuracy,
-                          mode='lines',
-                          name='Validation Accuracy'))
+            graph.Scatter(
+                x=x_axis,
+                y=y_validation_accuracy,
+                mode='lines',
+                name='Validation Accuracy',
+            ))
 
-        fig.update_layout(autosize=False,
-                          plot_bgcolor="#d9d9d9",
-                          title="Training/Validation Loss & Accuracy",
-                          width=1000,
-                          height=600,
-                          xaxis_title="EPOCH #",
-                          yaxis_title="LOSS/ACCURACY")
+        fig.update_layout(
+            autosize=False,
+            plot_bgcolor="#d9d9d9",
+            title="Training/Validation Loss & Accuracy",
+            width=1000,
+            height=600,
+            xaxis_title="EPOCH #",
+            yaxis_title="LOSS/ACCURACY",
+        )
 
         if save_path:
             fig.write_image(save_path)
@@ -356,5 +369,43 @@ def confusion_mesh(
                 class_name)]
             return class_confusion_mesh
         return confusion_mesh
+    except Exception as e:
+        raise e
+
+
+def plot_confusion_mesh(
+    confusion_mesh: np.ndarray,
+    class_name: str = None,
+):
+    try:
+        hover_text = [["FALSE NEGATIVES", "TRUE NEGATIVES"],
+                      ["TRUE POSITIVES", "FALSE POSITIVES"]]
+
+        truth_values = ["TRUE", "FALSE"]
+
+        scaled_values = np.sort(
+            np.interp(confusion_mesh,
+                      (confusion_mesh.min(), confusion_mesh.max()),
+                      (0, +1)).reshape(1, -1)).squeeze().tolist()
+        colors = ["#876a96", "#5e366a", "#815e94", "#694b7c"]
+        custom_color_scale = list(zip(scaled_values, colors))
+
+        mesh_title = f"<i><b>{class_name} CONFUSION MATRIX</b></i>"
+        fig = ff.create_annotated_heatmap(
+            confusion_mesh,
+            x=truth_values,
+            y=truth_values,
+            colorscale=custom_color_scale,
+            text=hover_text,
+            hoverinfo='text',
+        )
+        fig.update_layout(
+            title_text=mesh_title,
+            xaxis=dict(title="TRUE VALUE"),
+            yaxis=dict(title="PREDICTED VALUE",
+                       categoryorder='category ascending'),
+        )
+        fig.show()
+
     except Exception as e:
         raise e
