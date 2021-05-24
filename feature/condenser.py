@@ -47,7 +47,7 @@ class FeatureCondenser:
     def save_class_names(self, class_names):
         try:
             class_labels = self.datum.create_dataset(
-                "class_labels", (len(class_names), ),
+                "class_names", (len(class_names), ),
                 dtype=h5py.special_dtype(vlen=str))
             class_labels[:] = class_names
         except Exception as e:
