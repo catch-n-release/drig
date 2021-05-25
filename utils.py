@@ -358,16 +358,19 @@ def confusion_mesh(
             predictions,
             labels=encoded_classes,
         )
-        if class_index:
-            class_confusion_mesh = confusion_mesh[class_index]
-            if classes:
+
+        if (class_index or class_name) and classes:
+            if class_index:
+                class_confusion_mesh = confusion_mesh[class_index]
                 class_name = classes[class_index]
-                return class_confusion_mesh, class_name
-            return class_confusion_mesh
-        elif class_name and classes:
-            class_confusion_mesh = confusion_mesh[list(classes).index(
-                class_name)]
-            return class_confusion_mesh
+
+            elif class_name:
+                class_index = list(classes).index(class_name)
+                class_confusion_mesh = confusion_mesh[class_index]
+
+            class_confusion_mesh[0, 0], class_confusion_mesh[
+                1, 1] = class_confusion_mesh[1, 1], class_confusion_mesh[0, 0]
+            return class_confusion_mesh, class_name, class_index
         return confusion_mesh
     except Exception as e:
         raise e
@@ -378,6 +381,7 @@ def plot_confusion_mesh(
     class_name: str = None,
 ):
     try:
+
         hover_text = [["FALSE NEGATIVES", "TRUE NEGATIVES"],
                       ["TRUE POSITIVES", "FALSE POSITIVES"]]
 
