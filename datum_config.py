@@ -146,5 +146,10 @@ class Faces94:
     CV: int = 3
     JOBS: int = -1
 
-    EGRESS_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "models/VGGFace"))
+    # EFFLUX CAST
+    EFFLUX_PATH: str = os.path.abspath(os.path.join(os.path.pardir, "models/"))
+
+    LOGISTIC_REGRESSOR_VGGFACE_PATH = os.path.join(
+        EFFLUX_PATH, "LogisticRegressor/TL/VGGFace")
+    SVM_VGGFACE_PATH = os.path.join(EFFLUX_PATH, "SVM/TL/VGGFace")
+    KNN_VGGFACE_PATH = os.path.join(EFFLUX_PATH, "KNN/TL/VGGFace")
