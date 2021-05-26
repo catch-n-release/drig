@@ -104,3 +104,9 @@ class CALTECH101Config:
     EGRESS_PATH: str = os.path.abspath(os.path.join(os.path.pardir, "models"))
     VGG16_NET_PATH: str = os.path.join(EGRESS_PATH,
                                        "VGG16/CALTECH101_tl.cpickle")
+
+
+@dataclass(frozen=True)
+class AnimalsConfig:
+    DATASET_PATH: str = os.path.abspath(
+        os.path.join(os.path.pardir, "datasets/animals"))
