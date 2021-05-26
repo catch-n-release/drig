@@ -46,8 +46,8 @@ class BatchComposer:
                                 image = preprocessor.preprocess(image)
                             preprocessed_images.append(image)
 
-                        assert len(images) == len(
-                            preprocessed_images), "Error post image processing"
+                        if len(images) != len(preprocessed_images):
+                            raise Exception("Error post image processing")
 
                         images = np.array(preprocessed_images)
 
