@@ -323,7 +323,7 @@ def compose_image_collages(
         raise e
 
 
-def image_dim(image_path: str):
+def image_cast(image_path: str):
     try:
         image = cv2.imread(image_path)
         assert type(image) == np.ndarray, "INVALID IMAGE PATH"
