@@ -117,6 +117,10 @@ class Faces94:
     FACE_IMAGE_DEPTH: int = 3
 
     EYES_DATASET_PATH: str = os.path.join(DATASET_PATH, "eyes")
+    EYES_IMAGE_HEIGHT: int = 48
+    EYES_IMAGE_WIDTH: int = 90
+    EYES_IMAGE_DEPTH: int = 3
+
     NOSE_DATASET_PATH: str = os.path.join(DATASET_PATH, "noses")
     MOUTH_DATASET_PATH: str = os.path.join(DATASET_PATH, "mouths")
 
@@ -149,7 +153,20 @@ class Faces94:
     # EFFLUX CAST
     EFFLUX_PATH: str = os.path.abspath(os.path.join(os.path.pardir, "models/"))
 
-    LOGISTIC_REGRESSOR_VGGFACE_PATH = os.path.join(
-        EFFLUX_PATH, "LogisticRegressor/TL/VGGFace")
-    SVM_VGGFACE_PATH = os.path.join(EFFLUX_PATH, "SVM/TL/VGGFace")
-    KNN_VGGFACE_PATH = os.path.join(EFFLUX_PATH, "KNN/TL/VGGFace")
+    # FULL FACE
+    REFINED_LR_VGGFACE_VGG16_FACE_PATH = os.path.join(
+        EFFLUX_PATH,
+        "LogisticRegressor/TL/VGGFace/VGG16/LR_VGGFace(VGG16)_face.cpickle")
+    REFINED_SVM_VGGFACE_VGG16_FACE_PATH = os.path.join(
+        EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_face.cpickle")
+    REFINED_KNN_VGGFACE_VGG16_FACE_PATH = os.path.join(
+        EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_face.cpickle")
+
+    # EYES
+    REFINED_LR_VGGFACE_VGG16_EYES_PATH = os.path.join(
+        EFFLUX_PATH,
+        "LogisticRegressor/TL/VGGFace/VGG16/LR_VGGFace(VGG16)_eyes.cpickle")
+    REFINED_SVM_VGGFACE_VGG16_EYES_PATH = os.path.join(
+        EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_eyes.cpickle")
+    REFINED_KNN_VGGFACE_VGG16_EYES_PATH = os.path.join(
+        EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_eyes.cpickle")
