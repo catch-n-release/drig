@@ -15,10 +15,10 @@ from dataclasses import dataclass
 class DatumComposer:
     def __init__(self, config: dataclass):
         try:
-            log.info("-----INTIALIZING HDF5 DATASET BUILDER-----")
+            log.info("-----INTIALIZING DATUM BUILDER-----")
             self.config = config
-            self.hdf5_datum_path = self.config.HDF5_DATUM_PATH
-            os.makedirs(self.hdf5_datum_path, exist_ok=True)
+            self.datum_path = self.config.FEATURE_DATUM_PATH
+            os.makedirs(self.datum_path, exist_ok=True)
             self.image_paths = list(
                 paths.list_images(config.TRAINING_IMAGES_PATH))
             self.labels = [
@@ -84,7 +84,7 @@ class DatumComposer:
     def compose(self, custom_split: dict = None):
         try:
 
-            log.info("-----BUILDING HDF5 DATASET-----")
+            log.info("-----BUILDING DATUM-----")
             log.info("----USING CUSTOM SPLIT---")
             split = custom_split
             if not custom_split:
