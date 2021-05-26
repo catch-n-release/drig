@@ -107,6 +107,11 @@ class CALTECH101Config:
 
 
 @dataclass(frozen=True)
+class AnimalsConfig:
+    DATASET_PATH: str = os.path.abspath(
+        os.path.join(os.path.pardir, "datasets/animals"))
+
+@dataclass(frozen=True)
 class Faces94:
     DATASET_PATH: str = os.path.abspath(
         os.path.join(os.path.pardir, "datasets/faces94"))
@@ -170,3 +175,4 @@ class Faces94:
         EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_eyes.cpickle")
     REFINED_KNN_VGGFACE_VGG16_EYES_PATH = os.path.join(
         EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_eyes.cpickle")
+
