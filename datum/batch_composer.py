@@ -4,7 +4,7 @@ import h5py
 from keras.preprocessing.image import ImageDataGenerator
 
 
-class HDF5BatchComposer:
+class BatchComposer:
     def __init__(self,
                  datum_path: str,
                  batch_size: int,
@@ -46,8 +46,8 @@ class HDF5BatchComposer:
                                 image = preprocessor.preprocess(image)
                             preprocessed_images.append(image)
 
-                        assert len(images) == len(
-                            preprocessed_images), "Error post image processing"
+                        if len(images) != len(preprocessed_images):
+                            raise Exception("Error post image processing")
 
                         images = np.array(preprocessed_images)
 
