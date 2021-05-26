@@ -26,7 +26,8 @@ def display_image(image_path: str = None, image: np.ndarray = None):
 
         if image_path:
             image = cv2.imread(image_path)
-            assert type(image) == np.ndarray, "INVALID IMAGE PATH"
+            if type(image) != np.ndarray:
+                raise TypeError("INVALID IMAGE PATH")
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
         raise e
@@ -80,10 +81,10 @@ def plot_training_metrics(
 
 
 def matplotlib_plot(
-    plot_values,
-    callback,
-    inline,
-    save_path,
+    plot_values: tuple,
+    callback: bool,
+    inline: bool,
+    save_path: str,
 ):
     try:
         x_axis, *loss_accuracy_value_list = plot_values
@@ -107,9 +108,9 @@ def matplotlib_plot(
 
 
 def display_prediction(
-    image_path,
-    prediction,
-    class_labels,
+    image_path: str,
+    prediction: np.ndarray,
+    class_labels: list,
 ):
     try:
         return display_image(image=cv2.putText(
@@ -119,7 +120,10 @@ def display_prediction(
         raise e
 
 
-def ranked_accuracies(predictions, labels):
+def ranked_accuracies(
+    predictions: np.ndarray,
+    labels: list,
+):
     try:
         rank_one_accuracy = 0
         rank_five_accuracy = 0
@@ -141,7 +145,7 @@ def ranked_accuracies(predictions, labels):
 
 
 def visualize_network(
-    model,
+    network,
     scale_xy: int = 2,
     spacing: int = 10,
     scale_z=0.1,
@@ -162,7 +166,7 @@ def visualize_network(
         color_map[AveragePooling2D]['fill'] = '#4EACF2'
         color_map[Concatenate]['fill'] = "#4A235A"
         return visualkeras.layered_view(
-            model,
+            network,
             color_map=color_map,
             font=font,
             legend=True,
@@ -194,8 +198,8 @@ def display_image_data(
 
 
 def draw_faces(
-    image,
-    faces,
+    image: np.ndarray,
+    faces: list,
 ):
     try:
         _ = [
@@ -209,10 +213,10 @@ def draw_faces(
 
 
 def plot(
-    plot_values,
-    callback,
-    inline,
-    save_path,
+    plot_values: tuple,
+    callback: bool,
+    inline: bool,
+    save_path: str,
 ):
     try:
 
@@ -268,9 +272,13 @@ def plot(
         raise e
 
 
-def plot_network(net):
+def plot_network(network):
     try:
-        return plot_model(net, show_dtype=True, show_shapes=True)
+        return plot_model(
+            network,
+            show_dtype=True,
+            show_shapes=True,
+        )
     except Exception as e:
         raise e
 
