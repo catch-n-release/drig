@@ -12,7 +12,7 @@ import os
 from dataclasses import dataclass
 
 
-class HDF5DatumComposer:
+class DatumComposer:
     def __init__(self, config: dataclass):
         try:
             log.info("-----INTIALIZING HDF5 DATASET BUILDER-----")
