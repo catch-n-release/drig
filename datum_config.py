@@ -9,12 +9,12 @@ class DogsVsCatsConfig:
         os.path.join(os.path.pardir, "datasets/kag_dogs_vs_cats"))
     TRAINING_IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
     LABEL_INDEX: str = -3
-    HDF5_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
-    TRAINING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
+    FEATURE_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
+    TRAINING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
                                             "training_datum.hdf5")
-    VALIDATION_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
+    VALIDATION_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
                                               "validation_datum.hdf5")
-    TESTING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
+    TESTING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
                                            "testing_datum.hdf5")
     MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
                                       "dog_vs_cats_mean_rgb.json")
@@ -57,12 +57,12 @@ class TinyImageNetConfig:
     MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
                                       "tiny_imagenet_mean_rgb.json")
 
-    HDF5_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
-    TRAINING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
+    FEATURE_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
+    TRAINING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
                                             "training_datum.hdf5")
-    VALIDATION_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
+    VALIDATION_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
                                               "validation_datum.hdf5")
-    TESTING_DATUM_PATH: str = os.path.join(HDF5_DATUM_PATH,
+    TESTING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
                                            "testing_datum.hdf5")
 
     NUM_CLASSES: int = 200
@@ -110,6 +110,7 @@ class CALTECH101Config:
 class AnimalsConfig:
     DATASET_PATH: str = os.path.abspath(
         os.path.join(os.path.pardir, "datasets/animals"))
+
 
 @dataclass(frozen=True)
 class Faces94:
@@ -175,4 +176,3 @@ class Faces94:
         EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_eyes.cpickle")
     REFINED_KNN_VGGFACE_VGG16_EYES_PATH = os.path.join(
         EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_eyes.cpickle")
-
