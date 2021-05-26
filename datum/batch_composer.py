@@ -4,7 +4,7 @@ import h5py
 from keras.preprocessing.image import ImageDataGenerator
 
 
-class HDF5BatchComposer:
+class BatchComposer:
     def __init__(self,
                  datum_path: str,
                  batch_size: int,
