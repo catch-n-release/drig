@@ -128,7 +128,14 @@ class Faces94:
     EYES_IMAGE_DEPTH: int = 3
 
     NOSE_DATASET_PATH: str = os.path.join(DATASET_PATH, "noses")
+    NOSE_IMAGE_HEIGHT: int = 48
+    NOSE_IMAGE_WIDTH: int = 50
+    NOSE_IMAGE_DEPTH: int = 3
+
     MOUTH_DATASET_PATH: str = os.path.join(DATASET_PATH, "mouths")
+    MOUTH_IMAGE_HEIGHT: int = 48
+    MOUTH_IMAGE_WIDTH: int = 62
+    MOUTH_IMAGE_DEPTH: int = 3
 
     LABEL_INDEX: int = -4
 
@@ -176,3 +183,21 @@ class Faces94:
         EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_eyes.cpickle")
     REFINED_KNN_VGGFACE_VGG16_EYES_PATH = os.path.join(
         EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_eyes.cpickle")
+
+    # NOSE
+    REFINED_LR_VGGFACE_VGG16_NOSE_PATH = os.path.join(
+        EFFLUX_PATH,
+        "LogisticRegressor/TL/VGGFace/VGG16/LR_VGGFace(VGG16)_nose.cpickle")
+    REFINED_SVM_VGGFACE_VGG16_NOSE_PATH = os.path.join(
+        EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_nose.cpickle")
+    REFINED_KNN_VGGFACE_VGG16_NOSE_PATH = os.path.join(
+        EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_nose.cpickle")
+
+    # MOUTH
+    REFINED_LR_VGGFACE_VGG16_MOUTH_PATH = os.path.join(
+        EFFLUX_PATH,
+        "LogisticRegressor/TL/VGGFace/VGG16/LR_VGGFace(VGG16)_mouth.cpickle")
+    REFINED_SVM_VGGFACE_VGG16_MOUTH_PATH = os.path.join(
+        EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_mouth.cpickle")
+    REFINED_KNN_VGGFACE_VGG16_MOUTH_PATH = os.path.join(
+        EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_mouth.cpickle")
