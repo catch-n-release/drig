@@ -182,6 +182,7 @@ def visualize_network(
 def display_image_data(
     image_datum_path: str,
     image_dim: tuple = None,
+    tabs: int = 4,
 ):
     try:
         if not os.path.exists(image_datum_path):
@@ -190,7 +191,7 @@ def display_image_data(
         image_list = [
             Image.open(image_path).resize(
                 (image_dim)) if image_dim else Image.open(image_path)
-            for image_path in np.random.choice(image_paths, 4)
+            for image_path in np.random.choice(image_paths, tabs)
         ]
         return visualkeras.utils.linear_layout(image_list)
     except Exception as e:
@@ -355,7 +356,7 @@ def image_class(
 def confusion_mesh(
     tenets: np.ndarray,
     predictions: np.ndarray,
-    encoded_classes: np.ndarray,
+    encoded_classes: np.ndarray = None,
     class_name: str = None,
     class_index: int = None,
     classes: np.ndarray = None,
