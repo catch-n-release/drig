@@ -27,7 +27,7 @@ def display_image(image_path: str = None, image: np.ndarray = None):
         if image_path:
             image = cv2.imread(image_path)
             if type(image) != np.ndarray:
-                raise TypeError("INVALID IMAGE PATH")
+                raise OSError("INVALID IMAGE PATH")
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
         raise e
@@ -336,7 +336,7 @@ def image_cast(image_path: str):
     try:
         image = cv2.imread(image_path)
         if type(image) != np.ndarray:
-            raise TypeError("INVALID IMAGE PATH")
+            raise OSError("INVALID IMAGE PATH")
         return image.shape
     except Exception as e:
         raise e
@@ -432,6 +432,10 @@ def plot_confusion_mesh(
 def list_image_paths(dataset_path: str = None):
     try:
         all_image_paths = list(paths.list_images(dataset_path))
+        if not os.path.exists(dataset_path):
+            raise OSError("INVALID DATASET PATH")
+        if not all_image_paths:
+            raise Exception("DIRECTORY HAS NO IMAGES")
         return all_image_paths
     except Exception as e:
         raise e
