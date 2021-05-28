@@ -17,3 +17,11 @@ def random_image_path():
 @pytest.fixture
 def random_image(random_image_path):
     return cv2.imread(random_image_path)
+
+
+@pytest.fixture
+def test_dir():
+    test_dir_path = os.path.join(os.pardir, "_tests/test_dir")
+    os.makedirs(test_dir_path, exist_ok=True)
+    yield test_dir_path
+    shutil.rmtree(test_dir_path)
