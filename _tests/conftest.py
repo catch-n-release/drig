@@ -3,6 +3,8 @@ import numpy as np
 from imutils import paths
 import cv2
 from drig.datum_config import AnimalsConfig as config
+import os
+import shutil
 
 
 @pytest.fixture
