@@ -15,11 +15,13 @@ class ImageDatumLoader:
         except Exception as e:
             raise e
 
-    def load(self,
-             image_paths,
-             verbose=-1,
-             input_dim=None,
-             normalize_data=False):
+    def load(
+        self,
+        image_paths,
+        verbose=-1,
+        input_dim=None,
+        normalize_data=True,
+    ):
         try:
             data = list()
             labels = list()
