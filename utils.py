@@ -335,7 +335,8 @@ def compose_image_collages(
 def image_cast(image_path: str):
     try:
         image = cv2.imread(image_path)
-        assert type(image) == np.ndarray, "INVALID IMAGE PATH"
+        if type(image) != np.ndarray:
+            raise TypeError("INVALID IMAGE PATH")
         return image.shape
     except Exception as e:
         raise e
