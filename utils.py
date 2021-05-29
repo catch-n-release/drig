@@ -108,14 +108,31 @@ def matplotlib_plot(
 
 
 def display_prediction(
-    image_path: str,
-    prediction: np.ndarray,
-    class_labels: list,
+        prediction: np.ndarray,
+        class_labels: list,
+        image: np.ndarray = None,
+        image_path: str = None,
+        text_origin: tuple = (10, 30),
+        font_scale: float = 0.5,
+        text_color: tuple = (0, 255, 0),
+        text_thickness: int = 1,
 ):
     try:
+        if image_path:
+            image = read_image(image_path)
+        elif image.any():
+            pass
+        else:
+            raise Exception("PLEASE PROVIDE EITHER IMAGE OR IMAGE PATH")
         return display_image(image=cv2.putText(
-            cv2.imread(image_path), f"Label: {class_labels[prediction[0]]}",
-            (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0, 255, 0), 2), )
+            image,
+            f"Class: {class_labels[prediction[0]]}",
+            text_origin,
+            cv2.FONT_HERSHEY_COMPLEX,
+            font_scale,
+            text_color,
+            text_thickness,
+        ), )
     except Exception as e:
         raise e
 
@@ -389,6 +406,7 @@ def confusion_mesh(
 def plot_confusion_mesh(
     confusion_mesh: np.ndarray,
     class_name: str = None,
+    save_path: str = None,
 ):
     try:
 
@@ -423,6 +441,9 @@ def plot_confusion_mesh(
                 categoryorder='category ascending',
             ),
         )
+        if save_path:
+            fig.write_image(save_path)
+
         fig.show()
 
     except Exception as e:
@@ -445,6 +466,7 @@ def random_image(
     dataset_path: str = None,
     image_paths: list = None,
     class_index: int = None,
+    return_image_path: bool = False,
 ):
     try:
         if dataset_path:
@@ -452,12 +474,52 @@ def random_image(
         elif image_paths:
             all_image_paths = image_paths
         random_image_path = np.random.choice(all_image_paths)
+        image = read_image(random_image_path)
+        upshots = (image, )
+        if return_image_path:
+            upshots = (
+                *upshots,
+                random_image_path,
+            )
         if class_index:
             class_name = image_class(
                 random_image_path,
                 class_index,
             )
-            return random_image_path, class_name
-        return random_image_path
+            upshots = (
+                *upshots,
+                class_name,
+            )
+
+        return upshots
+    except Exception as e:
+        raise e
+
+
+def read_image(image_path: str):
+    try:
+        return cv2.imread(image_path)
+    except Exception as e:
+        raise e
+
+
+def preprocess_image(
+    preprocessors: list,
+    image: np.ndarray = None,
+    image_path: str = None,
+    for_prediction: bool = False,
+):
+    try:
+        if image.any():
+            pass
+        elif image_path:
+            image = read_image(image_path)
+        else:
+            raise Exception("PLEASE PROVIDE EITHER IMAGE OR IMAGE PATH")
+        for preprocessor in preprocessors:
+            image = preprocessor.preprocess(image)
+        if for_prediction:
+            image = np.expand_dims(image, axis=0)
+        return image
     except Exception as e:
         raise e
