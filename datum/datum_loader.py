@@ -4,10 +4,14 @@ import progressbar
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
+from drig.utils import log, list_image_paths
 
 
 class ImageDatumLoader:
-    def __init__(self, preprocessors=None):
+    def __init__(
+        self,
+        preprocessors: list = None,
+    ):
         try:
             self.preprocessors = preprocessors
             if self.preprocessors is None:
@@ -17,12 +21,13 @@ class ImageDatumLoader:
 
     def load(
         self,
-        image_paths,
-        verbose=-1,
-        input_dim=None,
-        normalize_data=True,
+        dataset_path: str,
+        class_index: int,
+        input_cast: tuple = None,
+        normalized: bool = True,
     ):
         try:
+            image_paths = list_image_paths(dataset_path)
             data = list()
             labels = list()
 
@@ -36,13 +41,17 @@ class ImageDatumLoader:
                 " ",
                 progressbar.ETA(),
             ]
-            prog_bar = progressbar.ProgressBar(maxval=len(image_paths),
-                                               widgets=widgets).start()
+            prog_bar = progressbar.ProgressBar(
+                maxval=len(image_paths),
+                widgets=widgets,
+            ).start()
 
             for i, image_path in enumerate(image_paths):
 
                 image = cv2.imread(image_path)
-                label = image_path.split("/")[-2]
+                label = image_path.replace(".", " ").replace(
+                    "/", " ").split(" ")[class_index]
+
                 if self.preprocessors:
                     for preprocessor in self.preprocessors:
                         image = preprocessor.preprocess(image)
@@ -50,17 +59,18 @@ class ImageDatumLoader:
                 labels.append(label)
 
                 prog_bar.update(i)
+            self.classes = np.unique(labels)
             prog_bar.finish()
             data = np.array(data)
             labels = np.array(labels)
-            print(f"Processed {i+1}/{len(image_paths)} Images.")
-            if input_dim:
+            log.info(f"PROCESSED {i+1}/{len(image_paths)} IMAGES.")
+            if input_cast:
                 flattened_data = data.reshape(data.shape[0],
-                                              np.prod(np.array(input_dim)))
-                print(
-                    f"Feature Matrix Memory Size: {flattened_data.nbytes/(1024*1000.0)} MB"
+                                              np.prod(np.array(input_cast)))
+                log.info(
+                    f"MEMORY SIZE OCCUPIED: {flattened_data.nbytes/(1024*1000.0)} MB"
                 )
-            if normalize_data:
+            if normalized:
                 data = data.astype("float") / 255.0
             return data, labels
 
