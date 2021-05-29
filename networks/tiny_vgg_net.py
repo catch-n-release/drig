@@ -3,59 +3,103 @@ from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.layers.core import Activation, Flatten, Dense, Dropout
 from keras.layers.normalization import BatchNormalization
 from keras import backend
+from drig.config import Kernel, Trigger, PoolSize, Padding
 
 
 class TinyVGGNet:
     @staticmethod
-    def build(width, height, depth, classes):
+    def compose(
+        height,
+        width,
+        depth,
+        classes,
+    ):
         try:
-            input_dim = (height, width, depth)
+            input_cast = (
+                height,
+                width,
+                depth,
+            )
             channel_index = -1
             if backend.image_data_format() == "channels_first":
-                input_dim = (depth, width, height)
+                input_cast = (
+                    depth,
+                    width,
+                    height,
+                )
                 channel_index = 1
-            model = Sequential()
-            ##########
-            model.add(Conv2D(32, (3, 3), padding="same",
-                             input_shape=input_dim))
-            model.add(Activation("relu"))
-            model.add(BatchNormalization(axis=channel_index))
 
-            model.add(Conv2D(
+            net = Sequential()
+            """
+
+            SLAB 1
+
+            """
+            net.add(
+                Conv2D(
+                    32,
+                    Kernel.MESH_3x3,
+                    padding=Padding.SAME,
+                    input_shape=input_cast,
+                ))
+            net.add(Activation(Trigger.RELU))
+            net.add(BatchNormalization(axis=channel_index))
+
+            net.add(Conv2D(
                 32,
-                (3, 3),
-                padding="same",
+                Kernel.MESH_3x3,
+                padding=Padding.SAME,
             ))
-            model.add(Activation("relu"))
-            model.add(BatchNormalization(axis=channel_index))
-            ############
-            model.add(MaxPooling2D(pool_size=(2, 2)))
-            model.add(Dropout(0.25))
-            ############
-            model.add(Conv2D(64, (3, 3), padding="same"))
-            model.add(Activation("relu"))
-            model.add(BatchNormalization(axis=channel_index))
+            net.add(Activation(Trigger.RELU))
+            net.add(BatchNormalization(axis=channel_index))
 
-            model.add(Conv2D(
+            ############
+            net.add(MaxPooling2D(pool_size=PoolSize.MESH_2x2))
+            net.add(Dropout(0.25))
+            ############
+            """
+
+            SLAB 2
+
+            """
+            net.add(Conv2D(
                 64,
-                (3, 3),
-                padding="same",
+                Kernel.MESH_3x3,
+                padding=Padding.SAME,
             ))
-            model.add(Activation("relu"))
-            model.add(BatchNormalization(axis=channel_index))
+            net.add(Activation(Trigger.RELU))
+            net.add(BatchNormalization(axis=channel_index))
+
+            net.add(Conv2D(
+                64,
+                Kernel.MESH_3x3,
+                padding=Padding.SAME,
+            ))
+            net.add(Activation(Trigger.RELU))
+            net.add(BatchNormalization(axis=channel_index))
+
             #########
-            model.add(MaxPooling2D(pool_size=(2, 2)))
-            model.add(Dropout(0.25))
-            ###########
-            model.add(Flatten())
-            model.add(Dense(512))
-            model.add(Activation("relu"))
-            model.add(BatchNormalization())
-            model.add(Dropout(0.50))
-            #######
-            model.add(Dense(classes))
-            model.add(Activation("softmax"))
-            return model
+            net.add(MaxPooling2D(pool_size=PoolSize.MESH_2x2))
+            net.add(Dropout(0.25))
+            #########
+            """
+
+            SLAB 3
+
+            """
+            net.add(Flatten())
+            net.add(Dense(512))
+            net.add(Activation(Trigger.RELU))
+            net.add(BatchNormalization())
+            net.add(Dropout(0.50))
+            """
+
+            SLAB 4
+
+            """
+            net.add(Dense(classes))
+            net.add(Activation(Trigger.SOFTMAX))
+            return net
 
         except Exception as e:
             raise e
