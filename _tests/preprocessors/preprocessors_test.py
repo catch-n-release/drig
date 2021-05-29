@@ -1,35 +1,25 @@
-from drig.preprocessors import ShapePreprocessor, UniformAspectPreprocessor, NormalizationPreprocessor, ImageToArrayPreprocessor
+from drig.preprocessors import ShapePreprocessor, UniformAspectPreprocessor, NormalizationPreprocessor, ImageToArrayPreprocessor, WindowPreprocessor
 import cv2
 import numpy as np
+from drig.config import ImageCast
 
 
 def test_shape_preprocessor(random_image):
-    resize_height = 256
-    resize_width = 256
     shape_preprocessor = ShapePreprocessor(
-        resize_height,
-        resize_width,
+        ImageCast.RGB_256x256[0],
+        ImageCast.RGB_256x256[1],
     )
     resized_image = shape_preprocessor.preprocess(random_image)
-    assert (
-        resized_image.shape[0],
-        resized_image.shape[1],
-    ) == (
-        resize_height,
-        resize_width,
-    )
+    assert resized_image.shape[:2] == ImageCast.RGB_256x256[:2]
 
 
 def test_uniform_aspect_preprocessor(random_image):
-    resize_height = 256
-    resize_width = 256
     uniform_aspect_preprocessor = UniformAspectPreprocessor(
-        resize_height, resize_width)
-    resized_image = uniform_aspect_preprocessor.preprocess(random_image)
-    assert resized_image.shape[:2] == (
-        resize_height,
-        resize_width,
+        ImageCast.RGB_256x256[0],
+        ImageCast.RGB_256x256[1],
     )
+    resized_image = uniform_aspect_preprocessor.preprocess(random_image)
+    assert resized_image.shape[:2] == ImageCast.RGB_256x256[:2]
 
 
 def test_normalization_preprocessor(random_image):
@@ -58,21 +48,28 @@ def test_normalization_preprocessor(random_image):
 
 
 def test_image_to_array_preprocessor(random_image):
-    height, width, depth = random_image.shape
     image_array_preprocessor = ImageToArrayPreprocessor()
     image_array = image_array_preprocessor.preprocess(random_image)
     assert type(image_array) == np.ndarray
-    assert (height, width, depth) == image_array.shape
+    assert random_image.shape == image_array.shape
 
 
 def test_image_to_array_preprocessor_channels_first(random_image):
-    height, width, depth = random_image.shape
+    *random_image_dims, depth = random_image.shape
     image_array_preprocessor = ImageToArrayPreprocessor(
         data_format="channels_first")
     image_array = image_array_preprocessor.preprocess(random_image)
     assert type(image_array) == np.ndarray
     assert (
         depth,
-        height,
-        width,
+        *random_image_dims,
     ) == image_array.shape
+
+
+def test_window_preprocessor(random_image):
+    window_preprocessor = WindowPreprocessor(
+        height=ImageCast.RGB_64x64[0],
+        width=ImageCast.RGB_64x64[1],
+    )
+    image_patch = window_preprocessor.preprocess(random_image)
+    assert image_patch.shape == ImageCast.RGB_64x64
