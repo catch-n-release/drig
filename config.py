@@ -6,16 +6,23 @@ logging.basicConfig(level=logging.INFO)
 
 @dataclass(frozen=True)
 class AlexNetImage:
-    height: int = 227
-    width: int = 227
-    depth: int = 3
+    HEIGHT: int = 227
+    WIDTH: int = 227
+    DEPTH: int = 3
 
 
 @dataclass(frozen=True)
-class VGGImage:
-    height: int = 224
-    width: int = 224
-    depth: int = 3
+class VGGNetImage:
+    HEIGHT: int = 224
+    WIDTH: int = 224
+    DEPTH: int = 3
+
+
+@dataclass(frozen=True)
+class TinyVGGNetImage:
+    HEIGHT: int = 64
+    WIDTH: int = 64
+    DEPTH: int = 3
 
 
 @dataclass(frozen=True)
@@ -56,7 +63,7 @@ class Trigger:
 
 
 @dataclass(frozen=True)
-class ImageDim:
+class ImageCast:
     RGB_32x32: tuple = (32, 32, 3)
     RGB_64x64: tuple = (64, 64, 3)
     RGB_224x224: tuple = (224, 224, 3)

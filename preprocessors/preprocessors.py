@@ -6,7 +6,12 @@ import numpy as np
 
 
 class ShapePreprocessor:
-    def __init__(self, height, width, inter=cv2.INTER_AREA):
+    def __init__(
+        self,
+        height: int,
+        width: int,
+        inter=cv2.INTER_AREA,
+    ):
         try:
             self.width = width
             self.height = height
@@ -14,16 +19,27 @@ class ShapePreprocessor:
         except Exception as e:
             raise e
 
-    def preprocess(self, image):
+    def preprocess(
+        self,
+        image: np.ndarray,
+    ):
         try:
-            return cv2.resize(image, (self.width, self.height),
-                              interpolation=self.inter)
+            return cv2.resize(
+                image,
+                (self.width, self.height),
+                interpolation=self.inter,
+            )
         except Exception as e:
             raise e
 
 
 class UniformAspectPreprocessor():
-    def __init__(self, height, width, inter=cv2.INTER_AREA):
+    def __init__(
+        self,
+        height: int,
+        width: int,
+        inter=cv2.INTER_AREA,
+    ):
         try:
             self.width = width
             self.height = height
@@ -31,49 +47,73 @@ class UniformAspectPreprocessor():
         except Exception as e:
             raise e
 
-    def preprocess(self, image):
+    def preprocess(
+        self,
+        image: np.ndarray,
+    ):
         try:
             h, w = image.shape[:2]
             delta_w = 0
             delta_h = 0
 
             if w < h:
-                image = imutils.resize(image,
-                                       width=self.width,
-                                       inter=self.inter)
+                image = imutils.resize(
+                    image,
+                    width=self.width,
+                    inter=self.inter,
+                )
                 delta_h = int((image.shape[0] - self.height) / 2.0)
             else:
-                image = imutils.resize(image,
-                                       height=self.height,
-                                       inter=self.inter)
+                image = imutils.resize(
+                    image,
+                    height=self.height,
+                    inter=self.inter,
+                )
                 delta_w = int((image.shape[1] - self.width) / 2.0)
             new_h, new_w = image.shape[:2]
 
             image = image[delta_h:new_h - delta_h, delta_w:new_w - delta_w]
 
-            return cv2.resize(image, (self.width, self.height),
-                              interpolation=self.inter)
+            return cv2.resize(
+                image,
+                (self.width, self.height),
+                interpolation=self.inter,
+            )
 
         except Exception as e:
             raise e
 
 
 class ImageToArrayPreprocessor:
-    def __init__(self, data_format=None):
+    def __init__(
+        self,
+        data_format: str = None,
+    ):
         try:
             self.data_format = data_format
         except Exception as e:
             raise e
 
-    def preprocess(self, image):
+    def preprocess(
+        self,
+        image: np.ndarray,
+    ):
         try:
-            return img_to_array(image, data_format=self.data_format)
+            return img_to_array(
+                image,
+                data_format=self.data_format,
+            )
         except Exception as e:
             raise e
 
 
 class NormalizationPreprocessor:
-    def __init__(self, mean_red, mean_green, mean_blue):
+    def __init__(
+        self,
+        mean_red: float,
+        mean_green: float,
+        mean_blue: float,
+    ):
         try:
             self.mean_red = mean_red
             self.mean_green = mean_green
@@ -81,7 +121,10 @@ class NormalizationPreprocessor:
         except Exception as e:
             raise e
 
-    def preprocess(self, image):
+    def preprocess(
+        self,
+        image: np.ndarray,
+    ):
         try:
             (blue_channel, green_channel,
              red_channel) = cv2.split(image.astype("float32"))
@@ -95,14 +138,21 @@ class NormalizationPreprocessor:
 
 
 class WindowPreprocessor:
-    def __init__(self, height, width):
+    def __init__(
+        self,
+        height: int,
+        width: int,
+    ):
         try:
             self.height = height
             self.width = width
         except Exception as e:
             raise e
 
-    def preprocess(self, image):
+    def preprocess(
+        self,
+        image: np.ndarray,
+    ):
         try:
             return extract_patches_2d(image, (self.height, self.width),
                                       max_patches=1)[0]
@@ -111,11 +161,13 @@ class WindowPreprocessor:
 
 
 class OverSamplingPreprocessor:
-    def __init__(self,
-                 height,
-                 width,
-                 interpolation=cv2.INTER_AREA,
-                 x_flip=True):
+    def __init__(
+        self,
+        height: int,
+        width: int,
+        interpolation=cv2.INTER_AREA,
+        x_flip: bool = True,
+    ):
         try:
             self.height = height
             self.width = width
@@ -124,7 +176,10 @@ class OverSamplingPreprocessor:
         except Exception as e:
             raise e
 
-    def preprocess(self, image):
+    def preprocess(
+        self,
+        image: np.ndarray,
+    ):
         try:
             crops = list()
             image_height, image_width = image.shape[:2]

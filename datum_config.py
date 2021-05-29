@@ -1,23 +1,41 @@
 from dataclasses import dataclass, field
 from typing import Dict
 import os
+from drig.config import TinyVGGNetImage
 
 
 @dataclass(frozen=True)
 class DogsVsCatsConfig:
     DATASET_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "datasets/kag_dogs_vs_cats"))
-    TRAINING_IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
-    LABEL_INDEX: str = -3
-    FEATURE_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
-    TRAINING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
-                                            "training_datum.hdf5")
-    VALIDATION_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
-                                              "validation_datum.hdf5")
-    TESTING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
-                                           "testing_datum.hdf5")
-    MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
-                                      "dog_vs_cats_mean_rgb.json")
+        os.path.join(
+            os.path.pardir,
+            "datasets/kag_dogs_vs_cats",
+        ))
+    TRAINING_IMAGES_PATH: str = os.path.join(
+        DATASET_PATH,
+        "train",
+    )
+    CLASS_INDEX: str = -3
+    FEATURE_DATUM_PATH: str = os.path.join(
+        DATASET_PATH,
+        "hdf5_datum",
+    )
+    TRAINING_DATUM_PATH: str = os.path.join(
+        FEATURE_DATUM_PATH,
+        "training_datum.hdf5",
+    )
+    VALIDATION_DATUM_PATH: str = os.path.join(
+        FEATURE_DATUM_PATH,
+        "validation_datum.hdf5",
+    )
+    TESTING_DATUM_PATH: str = os.path.join(
+        FEATURE_DATUM_PATH,
+        "testing_datum.hdf5",
+    )
+    MEAN_RGB_PATH: str = os.path.join(
+        DATASET_PATH,
+        "dog_vs_cats_mean_rgb.json",
+    )
 
     NUM_CLASSES: int = 2
     NUM_VALIDATION_IMAGES: int = 1250 * NUM_CLASSES
@@ -31,39 +49,76 @@ class DogsVsCatsConfig:
     ALPHA = 1e-4
     EPOCHS = 75
 
-    EGRESS_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "models/AlexNet"))
+    EFFLUX_PATH: str = os.path.abspath(
+        os.path.join(
+            os.path.pardir,
+            "models/AlexNet",
+        ))
     NET_PATH: str = os.path.join(
-        EGRESS_PATH, f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.model")
+        EFFLUX_PATH,
+        f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.model",
+    )
 
     PLOT_PATH: str = os.path.join(
-        EGRESS_PATH, f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.png")
+        EFFLUX_PATH,
+        f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.png",
+    )
     JSON_PATH: str = os.path.join(
-        EGRESS_PATH, f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.json")
+        EFFLUX_PATH,
+        f"alexnet_dogs_vs_cats_{BATCH_SIZE}_{ALPHA}.json",
+    )
 
 
 @dataclass(frozen=True)
 class TinyImageNetConfig:
     DATASET_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "datasets/tiny-imagenet-200"))
+        os.path.join(
+            os.path.pardir,
+            "datasets/tiny-imagenet-200",
+        ))
 
-    TRAINING_IMAGES_PATH: str = os.path.join(DATASET_PATH, "train")
-    LABEL_INDEX: str = -4
-    VALIDATION_IMAGES_PATH: str = os.path.join(DATASET_PATH, "val/images")
-    VALIDATION_MAPPINGS: str = os.path.join(DATASET_PATH,
-                                            "val/val_annotations.txt")
-    WORDNET_IDS: str = os.path.join(DATASET_PATH, "wnids.txt")
-    WORDNET_LABELS: str = os.path.join(DATASET_PATH, "words.txt")
-    MEAN_RGB_PATH: str = os.path.join(DATASET_PATH,
-                                      "tiny_imagenet_mean_rgb.json")
+    TRAINING_IMAGES_PATH: str = os.path.join(
+        DATASET_PATH,
+        "train",
+    )
+    CLASS_INDEX: str = -4
+    VALIDATION_IMAGES_PATH: str = os.path.join(
+        DATASET_PATH,
+        "val/images",
+    )
+    VALIDATION_MAPPINGS: str = os.path.join(
+        DATASET_PATH,
+        "val/val_annotations.txt",
+    )
+    WORDNET_IDS: str = os.path.join(
+        DATASET_PATH,
+        "wnids.txt",
+    )
+    WORDNET_LABELS: str = os.path.join(
+        DATASET_PATH,
+        "words.txt",
+    )
+    MEAN_RGB_PATH: str = os.path.join(
+        DATASET_PATH,
+        "tiny_imagenet_mean_rgb.json",
+    )
 
-    FEATURE_DATUM_PATH: str = os.path.join(DATASET_PATH, "hdf5_datum")
-    TRAINING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
-                                            "training_datum.hdf5")
-    VALIDATION_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
-                                              "validation_datum.hdf5")
-    TESTING_DATUM_PATH: str = os.path.join(FEATURE_DATUM_PATH,
-                                           "testing_datum.hdf5")
+    FEATURE_DATUM_PATH: str = os.path.join(
+        DATASET_PATH,
+        "hdf5_datum",
+    )
+    TRAINING_DATUM_PATH: str = os.path.join(
+        FEATURE_DATUM_PATH,
+        "training_datum.hdf5",
+    )
+    VALIDATION_DATUM_PATH: str = os.path.join(
+        FEATURE_DATUM_PATH,
+        "validation_datum.hdf5",
+    )
+    TESTING_DATUM_PATH: str = os.path.join(
+        FEATURE_DATUM_PATH,
+        "testing_datum.hdf5",
+    )
 
     NUM_CLASSES: int = 200
     NUM_TESTING_IMAGES: int = 50 * NUM_CLASSES
@@ -72,23 +127,41 @@ class TinyImageNetConfig:
     IMAGE_PREPROCESSING_WIDTH: int = 64
     IMAGE_PREPROCESSING_DEPTH: int = 3
 
-    EGRESS_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "models/NighGoogeLeNet"))
-    NET_PATH: str = os.path.join(EGRESS_PATH,
-                                 "model_tracks/tiny_imagenet_epoch_70.hdf5")
-    PLOT_PATH: str = os.path.join(EGRESS_PATH, "tiny_imagenet.png")
-    JSON_PATH: str = os.path.join(EGRESS_PATH, "tiny_imagenet.json")
+    EFFLUX_PATH: str = os.path.abspath(
+        os.path.join(
+            os.path.pardir,
+            "models/NighGoogeLeNet",
+        ))
+    NET_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "model_tracks/tiny_imagenet_epoch_70.hdf5",
+    )
+    PLOT_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "tiny_imagenet.png",
+    )
+    JSON_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "tiny_imagenet.json",
+    )
 
 
 @dataclass(frozen=True)
 class CALTECH101Config:
     DATASET_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "datasets/101_ObjectCategories"))
-    LABEL_INDEX: int = -3
+        os.path.join(
+            os.path.pardir,
+            "datasets/101_ObjectCategories",
+        ))
+    CLASS_INDEX: int = -3
     FEATURE_DATASET_DIR_PATH: str = os.path.join(
-        os.path.dirname(DATASET_PATH), "features/101_ObjectCategories")
-    VGG16_FEATURE_DATUM_PATH: str = os.path.join(FEATURE_DATASET_DIR_PATH,
-                                                 "VGG16_features.hdf5")
+        os.path.dirname(DATASET_PATH),
+        "features/101_ObjectCategories",
+    )
+    VGG16_FEATURE_DATUM_PATH: str = os.path.join(
+        FEATURE_DATASET_DIR_PATH,
+        "VGG16_features.hdf5",
+    )
 
     # FEATURE EXTRACTOR CAST
     BATCH_SIZE: int = 64
@@ -101,16 +174,75 @@ class CALTECH101Config:
     CV: int = 3
     JOBS: int = -1
 
-    EGRESS_PATH: str = os.path.abspath(os.path.join(os.path.pardir, "models"))
-    VGG16_NET_PATH: str = os.path.join(EGRESS_PATH,
-                                       "VGG16/CALTECH101_tl.cpickle")
+    # UPSHOTS CAST
+    EFFLUX_PATH: str = os.path.abspath(os.path.join(
+        os.path.pardir,
+        "models",
+    ))
+    VGG16_NET_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "VGG16/CALTECH101_tl.cpickle",
+    )
 
 
 @dataclass(frozen=True)
 class AnimalsConfig:
     DATASET_PATH: str = os.path.abspath(
-        os.path.join(os.path.pardir, "datasets/animals"))
+        os.path.join(
+            os.path.pardir,
+            "datasets/animals",
+        ))
 
+
+@dataclass(frozen=True)
+class Flowers17Config:
+    DATASET_PATH: str = os.path.abspath(
+        os.path.join(
+            os.path.pardir,
+            "datasets/17flowers",
+        ))
+    CLASS_INDEX: int = -3
+
+    # PREPROCESSING CAST
+    IMAGE_PREPROCESSING_HEIGHT: int = TinyVGGNetImage.HEIGHT
+    IMAGE_PREPROCESSING_WIDTH: int = TinyVGGNetImage.WIDTH
+    IMAGE_PREPROCESSING_DEPTH: int = TinyVGGNetImage.DEPTH
+
+    # TRAINING CAST
+    TEST_SIZE = 0.25
+    ALPHA = 5e-2
+    BATCH_SIZE = 64
+    EPOCHS = 100
+
+    # UPSHOTS CAST
+    EFFLUX_PATH: str = os.path.abspath(os.path.join(
+        os.path.pardir,
+        "models",
+    ))
+    VGG16_NET_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "TinyVGGNet/flowers17/flowers17.h5",
+    )
+
+    VGG16_LOSS_ACC_PLOT_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "TinyVGGNet/flowers17/flowers17_regularized.png",
+    )
+    JSON_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "TinyVGGNet/flowers17/flowers17_regularized.json",
+    )
+
+    REGULARIZED_VGG16_NET_PATH: str = os.path.join(
+        EFFLUX_PATH, "TinyVGGNet/flowers17/flowers17_regularized.h5")
+    REGULARIZED_VGG16_LOSS_ACC_PLOT_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "TinyVGGNet/flowers17/flowers17_regularized.png",
+    )
+    REGULARIZED_JSON_PATH: str = os.path.join(
+        EFFLUX_PATH,
+        "TinyVGGNet/flowers17/flowers17_regularized.json",
+    )
 
 @dataclass(frozen=True)
 class Faces94:
@@ -201,3 +333,4 @@ class Faces94:
         EFFLUX_PATH, "SVM/TL/VGGFace/VGG16/SVM_VGGFace(VGG16)_mouth.cpickle")
     REFINED_KNN_VGGFACE_VGG16_MOUTH_PATH = os.path.join(
         EFFLUX_PATH, "KNN/TL/VGGFace/VGG16/KNN_VGGFace(VGG16)_mouth.cpickle")
+
