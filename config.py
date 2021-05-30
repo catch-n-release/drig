@@ -74,3 +74,17 @@ class ImageCast:
     GRAY_224x224: tuple = (224, 224, 1)
     GRAY_227x227: tuple = (227, 227, 1)
     GRAY_256x256: tuple = (256, 256, 1)
+
+
+@dataclass(frozen=True)
+class Error:
+    DATASET_PATH_ERROR: str = "PROVIDED DATASET PATH IS INVALID."
+    IMAGE_PATH_ERROR: str = "PROVIDED IMAGE PATH IS INVALID."
+    TRAINING_METRICS_PLOT_ERROR: str = "EITHER JSON PATH OR EPOCHS & MODEL TRAINING HISTORY SHOULD BE SUPPLIED"
+    NO_IMAGE_OR_PATH_ERROR: str = "PLEASE PROVIDE EITHER IMAGE OR IMAGE PATH"
+    EMPTY_DATASET_ERROR: str = "DIRECTORY HAS NO IMAGES"
+
+
+@dataclass(frozen=True)
+class ImageFontPath:
+    SKIA: str = "/System/Library/Fonts/Supplemental/Skia.ttf"
