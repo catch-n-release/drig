@@ -1,4 +1,4 @@
-from drig.preprocessors import ShapePreprocessor, UniformAspectPreprocessor, NormalizationPreprocessor, ImageToArrayPreprocessor, WindowPreprocessor
+from drig.preprocessors import ShapePreprocessor, UniformAspectPreprocessor, NormalizationPreprocessor, ImageToArrayPreprocessor, WindowPreprocessor, OverSamplingPreprocessor
 import cv2
 import numpy as np
 from drig.config import ImageCast
@@ -10,7 +10,7 @@ def test_shape_preprocessor(random_image):
         ImageCast.RGB_256x256[1],
     )
     resized_image = shape_preprocessor.preprocess(random_image)
-    assert resized_image.shape[:2] == ImageCast.RGB_256x256[:2]
+    assert resized_image.shape == ImageCast.RGB_256x256
 
 
 def test_uniform_aspect_preprocessor(random_image):
@@ -19,7 +19,7 @@ def test_uniform_aspect_preprocessor(random_image):
         ImageCast.RGB_256x256[1],
     )
     resized_image = uniform_aspect_preprocessor.preprocess(random_image)
-    assert resized_image.shape[:2] == ImageCast.RGB_256x256[:2]
+    assert resized_image.shape == ImageCast.RGB_256x256
 
 
 def test_normalization_preprocessor(random_image):
@@ -73,3 +73,18 @@ def test_window_preprocessor(random_image):
     )
     image_patch = window_preprocessor.preprocess(random_image)
     assert image_patch.shape == ImageCast.RGB_64x64
+
+
+def test_over_sampling_preprocessor(random_image):
+    over_sample_preproc = OverSamplingPreprocessor(
+        height=ImageCast.RGB_64x64[0],
+        width=ImageCast.RGB_64x64[1],
+    )
+    over_sampled_images = over_sample_preproc.preprocess(random_image)
+
+    assert len(over_sampled_images) == 10
+    assert all(
+        map(
+            lambda image: image.shape == ImageCast.RGB_64x64,
+            over_sampled_images,
+        ))
