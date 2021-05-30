@@ -1,11 +1,4 @@
-from keras.models import Sequential, Model
-from keras.layers.convolutional import Conv2D, MaxPooling2D, AveragePooling2D
-from keras.layers.core import Activation, Flatten, Dense, Dropout
-from keras.layers.normalization import BatchNormalization
-from keras import backend
-from keras.regularizers import l2
-from keras.layers import concatenate, Input
-from drig.config import Kernel, PoolSize, Stride, Padding
+from keras.layers.core import Flatten, Dense, Dropout
 
 
 class CustomDense:
