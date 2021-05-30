@@ -17,16 +17,16 @@ class CustomNet:
             regressor: bool = False,
     ):
         try:
-            input_dim = (height, width, depth)
+            input_cast = (height, width, depth)
             channel_index = -1
 
             if backend.image_data_format() == "channels_first":
-                input_dim = (depth, height, width)
+                input_cast = (depth, height, width)
                 channel_index = 1
 
-            inputs = Input(shape=input_dim)
+            influx = Input(shape=input_cast)
 
-            tensor = inputs
+            tensor = influx
             for filter_size in filters:
                 tensor = Conv2D(
                     filter_size,
@@ -56,7 +56,7 @@ class CustomNet:
 
             ###############
 
-            net = Model(inputs, tensor)
+            net = Model(influx, tensor)
             return net
         except Exception as e:
             raise e

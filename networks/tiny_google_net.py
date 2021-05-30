@@ -8,7 +8,7 @@ from keras.layers import concatenate, Input
 
 class TinyGoogLeNet:
     @staticmethod
-    def convolution_slab(inputs,
+    def convolution_slab(influx,
                          filters: int,
                          kernel: tuple,
                          strides: tuple,
@@ -16,7 +16,7 @@ class TinyGoogLeNet:
                          padding: str = "same"):
         try:
             tensor = Conv2D(filters, kernel, strides=strides,
-                            padding=padding)(inputs)
+                            padding=padding)(influx)
             tensor = BatchNormalization(axis=channel_index)(tensor)
             convolution_tensor = Activation("relu")(tensor)
             return convolution_tensor
@@ -25,7 +25,7 @@ class TinyGoogLeNet:
 
     @staticmethod
     def miniception_slab(
-            inputs,
+            influx,
             conv_1_filters: int,
             conv_3_filters: int,
             channel_index: int,
@@ -34,9 +34,9 @@ class TinyGoogLeNet:
         try:
 
             conv_1_slab = TinyGoogLeNet.convolution_slab(
-                inputs, conv_1_filters, (1, 1), strides, channel_index)
+                influx, conv_1_filters, (1, 1), strides, channel_index)
             conv_3_slab = TinyGoogLeNet.convolution_slab(
-                inputs, conv_3_filters, (3, 3), strides, channel_index)
+                influx, conv_3_filters, (3, 3), strides, channel_index)
             miniception_tensor = concatenate([conv_1_slab, conv_3_slab],
                                              axis=channel_index)
             return miniception_tensor
@@ -44,13 +44,13 @@ class TinyGoogLeNet:
             raise e
 
     @staticmethod
-    def downsample_slab(inputs, filters: int, channel_index: int):
+    def downsample_slab(influx, filters: int, channel_index: int):
         try:
-            conv_slab = TinyGoogLeNet.convolution_slab(inputs,
+            conv_slab = TinyGoogLeNet.convolution_slab(influx,
                                                        filters, (3, 3), (2, 2),
                                                        channel_index,
                                                        padding="valid")
-            max_pool = MaxPooling2D(pool_size=(3, 3), strides=(2, 2))(inputs)
+            max_pool = MaxPooling2D(pool_size=(3, 3), strides=(2, 2))(influx)
 
             downsample_tensor = concatenate([conv_slab, max_pool],
                                             axis=channel_index)
@@ -61,21 +61,21 @@ class TinyGoogLeNet:
     @staticmethod
     def compose(height: int, width: int, depth: int, classes: int):
         try:
-            input_dim = (height, width, depth)
+            input_cast = (height, width, depth)
             channel_index = -1
 
             if backend.image_data_format == "channels_first":
-                input_dim = (depth, height, width)
+                input_cast = (depth, height, width)
                 channel_index = 1
 
-            inputs = Input(shape=input_dim)
+            influx = Input(shape=input_cast)
             """
 
             SLAB 1
 
             """
 
-            tensor = TinyGoogLeNet.convolution_slab(inputs, 96, (3, 3), (1, 1),
+            tensor = TinyGoogLeNet.convolution_slab(influx, 96, (3, 3), (1, 1),
                                                     channel_index)
             """
 
@@ -122,7 +122,7 @@ class TinyGoogLeNet:
             tensor = Dense(classes)(tensor)
             tensor = Activation("softmax")(tensor)
 
-            net = Model(inputs, tensor, name="tiny_google_net")
+            net = Model(influx, tensor, name="tiny_google_net")
 
             return net
 

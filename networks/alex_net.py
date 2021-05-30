@@ -12,10 +12,10 @@ class AlexNet:
     def compose(height, width, depth, classes, l2_regularization=0.0002):
         try:
 
-            input_dim = (height, width, depth)
+            input_cast = (height, width, depth)
             channel_index = -1
             if backend.image_data_format() == "channels_first":
-                input_dim = (
+                input_cast = (
                     depth,
                     height,
                     width,
@@ -31,7 +31,7 @@ class AlexNet:
                     Kernel.MESH_11x11,
                     strides=Stride.MESH_4x4,
                     padding=Padding.SAME,
-                    input_shape=input_dim,
+                    input_shape=input_cast,
                     kernel_regularizer=l2(l2_regularization),
                 ))
             net.add(Activation("relu"))
