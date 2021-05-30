@@ -25,3 +25,8 @@ def test_dir():
     os.makedirs(test_dir_path, exist_ok=True)
     yield test_dir_path
     shutil.rmtree(test_dir_path)
+
+
+@pytest.fixture
+def invalid_image_path():
+    return "invalid/image/path.jpg"
