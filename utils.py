@@ -15,6 +15,7 @@ from imutils import paths
 from PIL import ImageFont
 import os
 from drig.config import logging as log
+from drig.config import Error, ImageFontPath
 import json
 import glob
 from sklearn.metrics import multilabel_confusion_matrix
@@ -27,7 +28,7 @@ def display_image(image_path: str = None, image: np.ndarray = None):
         if image_path:
             image = cv2.imread(image_path)
             if type(image) != np.ndarray:
-                raise OSError("INVALID IMAGE PATH")
+                raise OSError(f"{Error.IMAGE_PATH_ERROR} : {image_path}")
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
         raise e
@@ -50,9 +51,7 @@ def plot_training_metrics(
         elif epochs and model_training_history:
             pass
         else:
-            raise Exception(
-                "EITHER JSON PATH OR EPOCHS & MODEL TRAINING HISTORY SHOULD BE SUPPLIED"
-            )
+            raise Exception(Error.TRAINING_METRICS_PLOT_ERROR)
 
         if callback or json_path:
             y_training_loss, y_validation_loss, y_training_accuracy, y_validation_accuracy = model_training_history[
@@ -123,7 +122,7 @@ def display_prediction(
         elif image.any():
             pass
         else:
-            raise Exception("PLEASE PROVIDE EITHER IMAGE OR IMAGE PATH")
+            raise Exception(Error.NO_IMAGE_OR_PATH_ERROR)
         return display_image(image=cv2.putText(
             image,
             f"Class: {class_labels[prediction[0]]}",
@@ -169,8 +168,7 @@ def visualize_network(
     save_image_path: str = None,
 ):
     try:
-        font = ImageFont.truetype(
-            "/System/Library/Fonts/Supplemental/Skia.ttf", 16)
+        font = ImageFont.truetype(ImageFontPath.SKIA, 16)
 
         color_map = defaultdict(dict)
         color_map[Conv2D]['fill'] = '#CA6F1E'
@@ -197,14 +195,14 @@ def visualize_network(
 
 
 def display_image_data(
-    image_datum_path: str,
+    image_dataset_path: str,
     image_dim: tuple = None,
     tabs: int = 4,
 ):
     try:
-        if not os.path.exists(image_datum_path):
-            raise Exception(f"Invalid Path : {image_datum_path}")
-        image_paths = list(paths.list_images(image_datum_path))
+        if not os.path.exists(image_dataset_path):
+            raise OSError(f"{Error.DATASET_PATH_ERROR} : {image_dataset_path}")
+        image_paths = list(paths.list_images(image_dataset_path))
         image_list = [
             Image.open(image_path).resize(
                 (image_dim)) if image_dim else Image.open(image_path)
@@ -221,8 +219,13 @@ def draw_faces(
 ):
     try:
         _ = [
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 1)
-            for x1, y1, x2, y2 in faces
+            cv2.rectangle(
+                image,
+                (x1, y1),
+                (x2, y2),
+                (0, 255, 0),
+                1,
+            ) for x1, y1, x2, y2 in faces
         ]
 
         return image
@@ -353,7 +356,7 @@ def image_cast(image_path: str):
     try:
         image = cv2.imread(image_path)
         if type(image) != np.ndarray:
-            raise OSError("INVALID IMAGE PATH")
+            raise OSError(f"{Error.IMAGE_PATH_ERROR} : {image_path}")
         return image.shape
     except Exception as e:
         raise e
@@ -454,9 +457,9 @@ def list_image_paths(dataset_path: str = None):
     try:
         all_image_paths = list(paths.list_images(dataset_path))
         if not os.path.exists(dataset_path):
-            raise OSError("INVALID DATASET PATH")
+            raise OSError(f"{Error.DATASET_PATH_ERROR} : {dataset_path}")
         if not all_image_paths:
-            raise Exception("DIRECTORY HAS NO IMAGES")
+            raise Exception(f"{Error.EMPTY_DATASET_ERROR} : {dataset_path}")
         return all_image_paths
     except Exception as e:
         raise e
@@ -515,7 +518,7 @@ def preprocess_image(
         elif image_path:
             image = read_image(image_path)
         else:
-            raise Exception("PLEASE PROVIDE EITHER IMAGE OR IMAGE PATH")
+            raise Exception(Error.NO_IMAGE_OR_PATH_ERROR)
         for preprocessor in preprocessors:
             image = preprocessor.preprocess(image)
         if for_prediction:
