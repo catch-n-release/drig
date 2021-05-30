@@ -61,14 +61,14 @@ class TinyGoogLeNet:
     @staticmethod
     def compose(height: int, width: int, depth: int, classes: int):
         try:
-            input_dim = (height, width, depth)
+            input_cast = (height, width, depth)
             channel_index = -1
 
             if backend.image_data_format == "channels_first":
-                input_dim = (depth, height, width)
+                input_cast = (depth, height, width)
                 channel_index = 1
 
-            inputs = Input(shape=input_dim)
+            inputs = Input(shape=input_cast)
             """
 
             SLAB 1
