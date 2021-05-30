@@ -11,7 +11,7 @@ from drig.config import Kernel, PoolSize, Stride, Padding
 class NighGoogLeNet:
     @staticmethod
     def convolution_slab(
-        inputs,
+        influx,
         filters: int,
         kernel: tuple,
         stride: tuple,
@@ -34,7 +34,7 @@ class NighGoogLeNet:
                 padding=padding,
                 kernel_regularizer=l2(l2_norm),
                 name=conv2d_alias,
-            )(inputs)
+            )(influx)
             tensor = BatchNormalization(
                 axis=channel_index,
                 name=batch_norm_alias,
@@ -49,7 +49,7 @@ class NighGoogLeNet:
 
     @staticmethod
     def inception_slab(
-        inputs,
+        influx,
         primary_cascade_conv_1_filters: int,
         secondary_cascade_conv_1_filters: int,
         secondary_cascade_conv_3_filters: int,
