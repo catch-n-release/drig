@@ -63,7 +63,7 @@ class LossAccuracyTracker(BaseLogger):
             raise e
 
 
-class AlphaSchedulers:
+class AlphaScheduler:
     def __init__(self, base_alpha, total_epochs):
         try:
             self.base_alpha = base_alpha
