@@ -24,9 +24,9 @@ class CustomNet:
                 input_cast = (depth, height, width)
                 channel_index = 1
 
-            inputs = Input(shape=input_cast)
+            influx = Input(shape=input_cast)
 
-            tensor = inputs
+            tensor = influx
             for filter_size in filters:
                 tensor = Conv2D(
                     filter_size,
@@ -56,7 +56,7 @@ class CustomNet:
 
             ###############
 
-            net = Model(inputs, tensor)
+            net = Model(influx, tensor)
             return net
         except Exception as e:
             raise e
