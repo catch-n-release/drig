@@ -196,7 +196,7 @@ class OverSamplingPreprocessor:
                       image_height - delta_height)
             points = [top_left, top_right, bottom_left, bottom_right, center]
 
-            for left, top, bottom, right in points:
+            for left, top, right, bottom, in points:
                 cropped_image = image[top:bottom, left:right]
 
                 cropped_image = cv2.resize(cropped_image,
