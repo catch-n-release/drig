@@ -11,7 +11,7 @@ from collections import defaultdict
 import visualkeras
 import matplotlib
 import plotly.graph_objects as graph
-from imutils import paths
+import imutils
 from PIL import ImageFont
 import os
 from drig.config import logging as log
@@ -22,13 +22,22 @@ from sklearn.metrics import multilabel_confusion_matrix
 import plotly.figure_factory as ff
 
 
-def display_image(image_path: str = None, image: np.ndarray = None):
+def display_image(
+    image_path: str = None,
+    image: np.ndarray = None,
+    image_resize_ratio: int = None,
+):
     try:
 
         if image_path:
             image = cv2.imread(image_path)
             if type(image) != np.ndarray:
                 raise OSError(f"{Error.IMAGE_PATH_ERROR} : {image_path}")
+        if image_resize_ratio:
+            image = imutils.resize(
+                image,
+                width=image.shape[1] * image_resize_ratio,
+            )
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
         raise e
@@ -107,14 +116,15 @@ def matplotlib_plot(
 
 
 def display_prediction(
-        prediction: np.ndarray,
-        class_labels: list,
-        image: np.ndarray = None,
-        image_path: str = None,
-        text_origin: tuple = (10, 30),
-        font_scale: float = 0.5,
-        text_color: tuple = (0, 255, 0),
-        text_thickness: int = 1,
+    prediction: np.ndarray,
+    class_labels: list,
+    image: np.ndarray = None,
+    image_path: str = None,
+    text_origin: tuple = (10, 30),
+    font_scale: float = 0.5,
+    text_color: tuple = (0, 255, 0),
+    text_thickness: int = 1,
+    image_resize_ratio: int = None,
 ):
     try:
         if image_path:
@@ -123,6 +133,12 @@ def display_prediction(
             pass
         else:
             raise Exception(Error.NO_IMAGE_OR_PATH_ERROR)
+        if image_resize_ratio:
+            image = imutils.resize(
+                image,
+                width=image.shape[1] * image_resize_ratio,
+            )
+
         return display_image(image=cv2.putText(
             image,
             f"Class: {class_labels[prediction[0]]}",
@@ -131,7 +147,7 @@ def display_prediction(
             font_scale,
             text_color,
             text_thickness,
-        ), )
+        ))
     except Exception as e:
         raise e
 
@@ -172,7 +188,7 @@ def visualize_network(
 
         color_map = defaultdict(dict)
         color_map[Conv2D]['fill'] = '#CA6F1E'
-        color_map[Activation]['fill'] = '#660000'
+        color_map[Activation]['fill'] = "#815e94"
         color_map[Dropout]['fill'] = '#212F3D'
         color_map[MaxPooling2D]['fill'] = '#006fC1'
         color_map[Dense]['fill'] = '#145A32'
@@ -202,7 +218,7 @@ def display_image_data(
     try:
         if not os.path.exists(image_dataset_path):
             raise OSError(f"{Error.DATASET_PATH_ERROR} : {image_dataset_path}")
-        image_paths = list(paths.list_images(image_dataset_path))
+        image_paths = list(imutils.paths.list_images(image_dataset_path))
         image_list = [
             Image.open(image_path).resize(
                 (image_dim)) if image_dim else Image.open(image_path)
@@ -424,7 +440,7 @@ def plot_confusion_mesh(
                 (confusion_mesh.min(), confusion_mesh.max()),
                 (0, +1),
             ).reshape(1, -1)).squeeze().tolist()
-        colors = ["#876a96", "#5e366a", "#815e94", "#694b7c"]
+        colors = ["#822e5f", "#662851", "#660f53", "#47003c"]
         custom_color_scale = list(zip(scaled_values, colors))
 
         mesh_title = f"<i><b>CONFUSION MATRIX</b></i> : {class_name}"
@@ -455,7 +471,7 @@ def plot_confusion_mesh(
 
 def list_image_paths(dataset_path: str = None):
     try:
-        all_image_paths = list(paths.list_images(dataset_path))
+        all_image_paths = list(imutils.paths.list_images(dataset_path))
         if not os.path.exists(dataset_path):
             raise OSError(f"{Error.DATASET_PATH_ERROR} : {dataset_path}")
         if not all_image_paths:
