@@ -8,15 +8,15 @@ import shutil
 
 
 @pytest.fixture
-def random_image_path():
+def random_testing_image_path():
     random_image_path = np.random.choice(
         list(paths.list_images(config.DATASET_PATH)))
     return random_image_path
 
 
 @pytest.fixture
-def random_image(random_image_path):
-    return cv2.imread(random_image_path)
+def random_testing_image(random_testing_image_path):
+    return cv2.imread(random_testing_image_path)
 
 
 @pytest.fixture
