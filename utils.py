@@ -25,7 +25,7 @@ import plotly.figure_factory as ff
 def display_image(
     image_path: str = None,
     image: np.ndarray = None,
-    image_resize_ratio: int = None,
+    resize_ratio: int = None,
 ):
     try:
 
@@ -33,10 +33,10 @@ def display_image(
             image = cv2.imread(image_path)
             if type(image) != np.ndarray:
                 raise OSError(f"{Error.IMAGE_PATH_ERROR} : {image_path}")
-        if image_resize_ratio:
+        if resize_ratio:
             image = imutils.resize(
                 image,
-                width=image.shape[1] * image_resize_ratio,
+                width=image.shape[1] * resize_ratio,
             )
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
@@ -124,7 +124,7 @@ def display_prediction(
     font_scale: float = 0.5,
     text_color: tuple = (0, 255, 0),
     text_thickness: int = 1,
-    image_resize_ratio: int = None,
+    resize_ratio: int = None,
 ):
     try:
         if image_path:
@@ -133,10 +133,10 @@ def display_prediction(
             pass
         else:
             raise Exception(Error.NO_IMAGE_OR_PATH_ERROR)
-        if image_resize_ratio:
+        if resize_ratio:
             image = imutils.resize(
                 image,
-                width=image.shape[1] * image_resize_ratio,
+                width=image.shape[1] * resize_ratio,
             )
 
         return display_image(image=cv2.putText(
