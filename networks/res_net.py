@@ -107,7 +107,6 @@ class ResNet:
         depth: int,
         classes: int,
         config: dict,
-        # filters: list,
         batch_norm_eps: float = 2e-5,
         batch_norm_mom: float = 9e-1,
         l2_notion: float = 1e-4,
@@ -167,7 +166,6 @@ class ResNet:
                     conv_stride,
                     batch_norm_eps,
                     batch_norm_mom,
-                    l2_notion,
                     clip=True,
                 )
 
@@ -176,9 +174,9 @@ class ResNet:
                         tensor,
                         filters,
                         channel_index,
-                        batch_norm_eps,
-                        batch_norm_mom,
-                        l2_notion,
+                        batch_norm_eps=batch_norm_eps,
+                        batch_norm_mom=batch_norm_mom,
+                        l2_notion=l2_notion,
                     )
             #########################################
 
@@ -201,11 +199,11 @@ class ResNet:
                 kernel_regularizer=l2(l2_notion),
             )(tensor)
 
-            tensor = Activation(Trigger.SOFTMAX)(tensor)
+            efflux = Activation(Trigger.SOFTMAX)(tensor)
 
             #########################################
 
-            net = Model(influx, tensor, name="res_net")
+            net = Model(influx, efflux, name="res_net")
 
             return net
 
