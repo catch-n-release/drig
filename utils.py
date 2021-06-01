@@ -48,7 +48,7 @@ def plot_training_metrics(
         if json_path:
             json_file = open(json_path, mode="r")
             model_training_history = json.load(json_file)
-        elif epochs and model_training_history:
+        elif epochs is not None and model_training_history:
             pass
         else:
             raise Exception(Error.TRAINING_METRICS_PLOT_ERROR)
