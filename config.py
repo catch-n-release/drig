@@ -89,3 +89,14 @@ class Error:
 @dataclass(frozen=True)
 class ImageFontPath:
     SKIA: str = "/System/Library/Fonts/Supplemental/Skia.ttf"
+
+
+@dataclass(frozen=True)
+class Loss:
+    CAT_CROSS: str = "categorical_crossentropy"
+    BI_CROSS: str = "binary_crossentropy"
+
+
+@dataclass(frozen=True)
+class Metrics:
+    ACCURACY: str = "accuracy"
