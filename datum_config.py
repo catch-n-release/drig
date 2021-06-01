@@ -209,10 +209,10 @@ class Flowers17Config:
     IMAGE_PREPROCESSING_DEPTH: int = TinyVGGNetImage.DEPTH
 
     # TRAINING CAST
-    TEST_SIZE = 0.25
-    ALPHA = 5e-2
-    BATCH_SIZE = 64
-    EPOCHS = 100
+    TEST_SIZE: float = 0.25
+    ALPHA: float = 5e-2
+    BATCH_SIZE: int = 64
+    EPOCHS: int = 100
 
     # UPSHOTS CAST
     EFFLUX_PATH: str = os.path.abspath(os.path.join(
@@ -242,4 +242,61 @@ class Flowers17Config:
     REGULARIZED_JSON_PATH: str = os.path.join(
         EFFLUX_PATH,
         "TinyVGGNet/flowers17/flowers17_regularized.json",
+    )
+
+
+@dataclass(frozen=True)
+class CIFAR10Config:
+    DATASET_PATH: str = os.path.abspath(
+        os.path.join(
+            os.path.pardir,
+            "datasets/CIFAR-10",
+        ))
+    CLASSES: int = 10
+
+    # IMAGE CAST
+
+    IMAGE_HEIGHT: int = 32
+    IMAGE_WIDTH: int = 32
+    IMAGE_DEPTH: int = 3
+
+    # TRAINING CAST
+    TEST_SIZE: float = 0.25
+    ALPHA: float = 1e-1
+    BATCH_SIZE: int = 128
+    L2_REGULATION: float = 5e-4
+    EPOCHS: int = 100
+    RESNET_CONFIG: Dict[int, tuple] = field(default_factory=lambda: ({
+        0: (0, 64),
+        1: (9, 64),
+        2: (9, 128),
+        3: (9, 256),
+    }))
+    STARTING_EPOCH = 0
+
+    # UPSHOTS CAST
+    RESNET_EFFLUX_PATH: str = os.path.abspath(
+        os.path.join(
+            os.path.pardir,
+            "models/ResNet",
+        ))
+
+    REFINED_RESNET_PATH: str = os.path.join(
+        RESNET_EFFLUX_PATH,
+        f"resnet56_cifar10_{BATCH_SIZE}_{ALPHA}.hdf5",
+    )
+
+    RESNET_TRACKS_PATH: str = os.path.join(
+        RESNET_EFFLUX_PATH,
+        "network_tracks",
+    )
+
+    RESNET_PLOT_PATH: str = os.path.join(
+        RESNET_EFFLUX_PATH,
+        f"resnet56_cifar10_{BATCH_SIZE}_{ALPHA}.png",
+    )
+
+    RESNET_JSON_PATH: str = os.path.join(
+        RESNET_EFFLUX_PATH,
+        f"resnet56_cifar10_{BATCH_SIZE}_{ALPHA}.json",
     )
