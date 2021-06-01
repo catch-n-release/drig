@@ -85,12 +85,13 @@ class AlphaScheduler:
             raise e
 
 
-class ModelTracker(Callback):
+class NetworkTracker(Callback):
     def __init__(self, model_dir, epoch_interval=5, starting_epoch=0):
 
         super(Callback, self).__init__()
 
         self.model_dir = model_dir
+        os.makedirs(self.model_dir, exist_ok=True)
         self.epoch_interval = epoch_interval
         self.epoch_head = starting_epoch
 
