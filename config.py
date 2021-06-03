@@ -84,6 +84,8 @@ class Error:
     TRAINING_METRICS_PLOT_ERROR: str = "EITHER JSON PATH OR EPOCHS & MODEL TRAINING HISTORY SHOULD BE SUPPLIED"
     NO_IMAGE_OR_PATH_ERROR: str = "PLEASE PROVIDE EITHER IMAGE OR IMAGE PATH"
     EMPTY_DATASET_ERROR: str = "DIRECTORY HAS NO IMAGES"
+    NO_DATASET_OR_IMAGE_PATHS_ERROR: str = "PLEASE PROVIDE EITHER DATASET PATH OR ALL IMAGE PATHS"
+    INVALID_PARAM_ERROR: str = "PLEASE PROVIDE VALID PARAMETER(S)"
 
 
 @dataclass(frozen=True)
@@ -100,3 +102,9 @@ class Loss:
 @dataclass(frozen=True)
 class Metrics:
     ACCURACY: str = "accuracy"
+
+
+@dataclass(frozen=True)
+class DataType:
+    FLOAT32: str = "float32"
+    UINT8: str = "uint8"
