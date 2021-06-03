@@ -1,6 +1,7 @@
 import pytest
 from drig.networks import ResNet
 from drig.config import ImageCast, Stride
+from drig.networks import ResNet
 
 
 def test_residual_slab(batch_norm_tensor):
@@ -43,4 +44,67 @@ def test_residual_slab_cast_clip(batch_norm_tensor):
     assert tuple(cast) == (
         *ImageCast.RGB_32x32[:2],
         filters,
+    )
+
+
+def test_res_net_compose(res_net_config):
+
+    classes = 10
+    res_net = ResNet.compose(
+        *ImageCast.RGB_32x32,
+        classes,
+        res_net_config,
+    )
+
+    assert tuple(
+        res_net.compute_output_shape(input_shape=(
+            None,
+            *ImageCast.RGB_32x32,
+        ))) == (
+            None,
+            classes,
+        )
+
+
+def test_res_net_conv_layers(res_net_config):
+
+    total_conv_layers = 1
+    for step, (slabs, filters) in res_net_config.items():
+        if step == 0:
+            continue
+        clipping_residual = 1
+        non_clipping_residuals = slabs - clipping_residual
+        conv_layers = (clipping_residual * 4) + (non_clipping_residuals * 3)
+        total_conv_layers += conv_layers
+
+    classes = 10
+    res_net = ResNet.compose(
+        *ImageCast.RGB_32x32,
+        classes,
+        res_net_config,
+    )
+
+    assert len(
+        list(
+            filter(lambda layer: layer["class_name"] == "Conv2D",
+                   res_net.get_config()["layers"]))) == total_conv_layers
+
+
+def test_res_net_avgpool(res_net_config):
+
+    classes = 10
+    res_net = ResNet.compose(
+        *ImageCast.RGB_32x32,
+        classes,
+        res_net_config,
+    )
+    for index, layer in enumerate(res_net.get_config()["layers"]):
+        if layer["class_name"] == "AveragePooling2D":
+            break
+
+    assert res_net.layers[index].output_shape == (
+        None,
+        1,
+        1,
+        256,
     )
