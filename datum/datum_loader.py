@@ -147,3 +147,25 @@ class CSVDatumLoader:
             return train_x, test_x
         except Exception as e:
             raise e
+
+    def load_image_csv(
+        self,
+        image_cast: tuple,
+        class_column_last: bool = True,
+    ):
+        try:
+            data = list()
+            classes = list()
+            class_column_index = -1 if class_column_last else 1
+            for row in open(self.csv_path, mode="r"):
+                classes.append(row[class_column_index])
+                pels = row[:-1] if class_column_last else row[1:]
+                image_pels = np.array([int(pel) for pel in pels],
+                                      dtype="uint8")
+                image = image_pels.reshape(image_cast)
+                data.append(image)
+
+            return (np.array(data), np.array(classes))
+
+        except Exception as e:
+            raise e
