@@ -262,9 +262,9 @@ class CIFAR10Config:
 
     # TRAINING CAST
     TEST_SIZE: float = 0.25
-    ALPHA: float = 1e-1
-    BATCH_SIZE: int = 128
-    L2_REGULATION: float = 5e-4
+    INIT_ALPHA: float = 1e-1
+    BATCH_SIZE: int = 64
+    L2_REGULATION: float = 1e-4
     EPOCHS: int = 100
     RESNET_CONFIG: Dict[int, tuple] = field(default_factory=lambda: ({
         0: (0, 64),
@@ -283,7 +283,7 @@ class CIFAR10Config:
 
     REFINED_RESNET_PATH: str = os.path.join(
         RESNET_EFFLUX_PATH,
-        f"resnet56_cifar10_{BATCH_SIZE}_{ALPHA}.hdf5",
+        f"resnet56_cifar10_{BATCH_SIZE}_{INIT_ALPHA}_decay.h5",
     )
 
     RESNET_TRACKS_PATH: str = os.path.join(
@@ -293,10 +293,10 @@ class CIFAR10Config:
 
     RESNET_PLOT_PATH: str = os.path.join(
         RESNET_EFFLUX_PATH,
-        f"resnet56_cifar10_{BATCH_SIZE}_{ALPHA}.png",
+        f"resnet56_cifar10_{BATCH_SIZE}_{INIT_ALPHA}_decay.png",
     )
 
     RESNET_JSON_PATH: str = os.path.join(
         RESNET_EFFLUX_PATH,
-        f"resnet56_cifar10_{BATCH_SIZE}_{ALPHA}.json",
+        f"resnet56_cifar10_{BATCH_SIZE}_{INIT_ALPHA}_decay.json",
     )
