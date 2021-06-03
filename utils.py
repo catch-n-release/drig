@@ -94,7 +94,7 @@ def matplotlib_plot(
         plt.plot(x_axis, y_validation_loss, label="Validation Loss")
         plt.plot(x_axis, y_training_accuracy, label="Training Accuracy")
         plt.plot(x_axis, y_validation_accuracy, label="Validation Accuracy")
-        plt.title("Training/Validation Loss & Accuracy")
+        plt.title(f"Training/Validation Loss & Accuracy : EPOCH {len(x_axis)}")
         plt.xlabel("EPOCH #")
         plt.ylabel("LOSS/ACCURACY")
         plt.legend()
@@ -276,7 +276,7 @@ def plot(
         fig.update_layout(
             autosize=False,
             plot_bgcolor="#d9d9d9",
-            title="Training/Validation Loss & Accuracy",
+            title=f"Training/Validation Loss & Accuracy : EPOCH {len(x_axis)}",
             width=1000,
             height=600,
             xaxis_title="EPOCH #",
