@@ -495,11 +495,7 @@ def random_image(
         random_image_path = np.random.choice(all_image_paths)
         image = read_image(random_image_path)
         upshots = (image, )
-        if return_image_path:
-            upshots = (
-                *upshots,
-                random_image_path,
-            )
+
         if class_index:
             class_name = image_class(
                 random_image_path,
@@ -508,6 +504,12 @@ def random_image(
             upshots = (
                 *upshots,
                 class_name,
+            )
+
+        if return_image_path:
+            upshots = (
+                *upshots,
+                random_image_path,
             )
 
         return upshots
