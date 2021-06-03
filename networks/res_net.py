@@ -16,8 +16,8 @@ class ResNet:
         channel_index: int,
         conv_stride: tuple = Stride.MESH_1x1,
         batch_norm_eps: float = 2e-5,
-        batch_norm_mom: float = 9e-1,
-        l2_notion: float = 1e-4,
+        batch_norm_mom: float = 0.9,
+        l2_notion: float = 0.0001,
         clip: bool = False,
     ):
         try:
@@ -108,8 +108,8 @@ class ResNet:
         classes: int,
         config: dict,
         batch_norm_eps: float = 2e-5,
-        batch_norm_mom: float = 9e-1,
-        l2_notion: float = 1e-4,
+        batch_norm_mom: float = 0.9,
+        l2_notion: float = 0.0001,
         genre: str = "cifar",
     ):
         try:
@@ -160,20 +160,20 @@ class ResNet:
                 conv_stride = Stride.MESH_1x1 if step == 1 else Stride.MESH_2x2
 
                 tensor = ResNet.residual_slab(
-                    tensor,
-                    filters,
-                    channel_index,
-                    conv_stride,
-                    batch_norm_eps,
-                    batch_norm_mom,
+                    influx=tensor,
+                    filters=filters,
+                    channel_index=channel_index,
+                    conv_stride=conv_stride,
+                    batch_norm_eps=batch_norm_eps,
+                    batch_norm_mom=batch_norm_mom,
                     clip=True,
                 )
 
                 for _ in range(slabs - 1):
                     tensor = ResNet.residual_slab(
-                        tensor,
-                        filters,
-                        channel_index,
+                        influx=tensor,
+                        filters=filters,
+                        channel_index=channel_index,
                         batch_norm_eps=batch_norm_eps,
                         batch_norm_mom=batch_norm_mom,
                         l2_notion=l2_notion,
