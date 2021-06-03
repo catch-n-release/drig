@@ -160,28 +160,28 @@ class CALTECH101Config:
     )
     VGG16_FEATURE_DATUM_PATH: str = os.path.join(
         FEATURE_DATASET_DIR_PATH,
-        "VGG16_features.hdf5",
+        "vgg16_features.hdf5",
     )
 
     # FEATURE EXTRACTOR CAST
     BATCH_SIZE: int = 64
     BUFFER_SIZE: int = 1600
 
-    # ML NETWORK CAST # LOGISTIC REGRESSION CAST
+    # TRAINING CAST
     TRAIN_SIZE: float = 0.75
-    PARAM_MESH: Dict[str, list] = field(default_factory=lambda: (dict(
-        C=[0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0])))
-    CV: int = 3
-    JOBS: int = -1
+    # PARAM_MESH: Dict[str, list] = field(default_factory=lambda: (dict(
+    #     C=[0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0])))
+    # CV: int = 3
+    # JOBS: int = -1
 
     # UPSHOTS CAST
     EFFLUX_PATH: str = os.path.abspath(os.path.join(
         os.path.pardir,
         "models",
     ))
-    VGG16_NET_PATH: str = os.path.join(
+    SVM_PATH: str = os.path.join(
         EFFLUX_PATH,
-        "VGG16/CALTECH101_tl.cpickle",
+        "SVM/TL/VGG16/vgg16_caltech101.cpickle",
     )
 
 
