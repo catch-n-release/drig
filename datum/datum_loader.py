@@ -1,10 +1,11 @@
 import numpy as np
 import cv2
 import progressbar
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 from drig.utils import log, list_image_paths
+from drig.config import DataType
 
 
 class ImageDatumLoader:
@@ -65,8 +66,10 @@ class ImageDatumLoader:
             labels = np.array(labels)
             log.info(f"PROCESSED {i+1}/{len(image_paths)} IMAGES.")
             if input_cast:
-                flattened_data = data.reshape(data.shape[0],
-                                              np.prod(np.array(input_cast)))
+                flattened_data = data.reshape(
+                    data.shape[0],
+                    np.prod(np.array(input_cast)),
+                )
                 log.info(
                     f"MEMORY SIZE OCCUPIED: {flattened_data.nbytes/(1024*1000.0)} MB"
                 )
@@ -139,10 +142,19 @@ class CSVDatumLoader:
                 else:
                     train_x_cat = np.hstack(
                         [train_x_cat, train_encoded_feature])
-                    test_x_cat = np.hstack([test_x_cat, test_encoded_feature])
+                    test_x_cat = np.hstack([
+                        test_x_cat,
+                        test_encoded_feature,
+                    ])
 
-            train_x = np.hstack([train_x_cat, train_x_cont])
-            test_x = np.hstack([test_x_cat, test_x_cont])
+            train_x = np.hstack([
+                train_x_cat,
+                train_x_cont,
+            ])
+            test_x = np.hstack([
+                test_x_cat,
+                test_x_cont,
+            ])
 
             return train_x, test_x
         except Exception as e:
@@ -152,20 +164,30 @@ class CSVDatumLoader:
         self,
         image_cast: tuple,
         class_column_last: bool = True,
+        encode_classes: bool = False,
     ):
         try:
             data = list()
             classes = list()
             class_column_index = -1 if class_column_last else 1
-            for row in open(self.csv_path, mode="r"):
+            for row in open(
+                    self.csv_path,
+                    mode="r",
+            ):
                 classes.append(row[class_column_index])
                 pels = row[:-1] if class_column_last else row[1:]
-                image_pels = np.array([int(pel) for pel in pels],
-                                      dtype="uint8")
+                image_pels = np.array(
+                    [int(pel) for pel in pels],
+                    dtype="uint8",
+                )
                 image = image_pels.reshape(image_cast)
                 data.append(image)
-
-            return (np.array(data), np.array(classes))
+            if encode_classes:
+                classes = LabelEncoder().fit_transform(classes)
+            return (
+                np.array(data, dtype=DataType.FLOAT32),
+                np.array(classes, dtype=DataType.UINT8),
+            )
 
         except Exception as e:
             raise e
