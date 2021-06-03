@@ -40,6 +40,7 @@ class PoolSize:
     MESH_3x3: tuple = (3, 3)
     MESH_4x4: tuple = (4, 4)
     MESH_5x5: tuple = (5, 5)
+    MESH_8x8: tuple = (8, 8)
 
 
 @dataclass(frozen=True)
@@ -88,3 +89,14 @@ class Error:
 @dataclass(frozen=True)
 class ImageFontPath:
     SKIA: str = "/System/Library/Fonts/Supplemental/Skia.ttf"
+
+
+@dataclass(frozen=True)
+class Loss:
+    CAT_CROSS: str = "categorical_crossentropy"
+    BI_CROSS: str = "binary_crossentropy"
+
+
+@dataclass(frozen=True)
+class Metrics:
+    ACCURACY: str = "accuracy"

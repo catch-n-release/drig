@@ -21,7 +21,15 @@ class NighGoogLeNet:
         alias: str = None,
     ):
         try:
-            conv2d_alias, batch_norm_alias, activation_alias = None, None, None
+            (
+                conv2d_alias,
+                batch_norm_alias,
+                activation_alias,
+            ) = (
+                None,
+                None,
+                None,
+            )
             if not alias:
                 conv2d_alias = f"{alias}_CONV"
                 batch_norm_alias = f"{alias}_BATCH_NORM"
@@ -64,7 +72,7 @@ class NighGoogLeNet:
         try:
 
             primary_cascade = NighGoogLeNet.convolution_slab(
-                inputs,
+                influx,
                 primary_cascade_conv_1_filters,
                 Kernel.MESH_1x1,
                 stride,
@@ -76,7 +84,7 @@ class NighGoogLeNet:
             #######################
 
             secondary_tensor = NighGoogLeNet.convolution_slab(
-                inputs,
+                influx,
                 secondary_cascade_conv_1_filters,
                 Kernel.MESH_1x1,
                 stride,
@@ -98,7 +106,7 @@ class NighGoogLeNet:
             #########################
 
             tertiary_tensor = NighGoogLeNet.convolution_slab(
-                inputs,
+                influx,
                 tertiary_cascade_conv_1_filters,
                 Kernel.MESH_1x1,
                 stride,
@@ -123,7 +131,7 @@ class NighGoogLeNet:
                 pool_size=PoolSize.MESH_3x3,
                 strides=stride,
                 padding=Padding.SAME,
-                name=f"{alias}_pooling_cascade_max_pool_layer")(inputs)
+                name=f"{alias}_pooling_cascade_max_pool_layer")(influx)
             pooling_cascade = NighGoogLeNet.convolution_slab(
                 pooling_tensor,
                 pooling_cascade_conv_1_filters,
@@ -157,11 +165,19 @@ class NighGoogLeNet:
     ):
         try:
 
-            input_cast = (height, width, depth)
+            input_cast = (
+                height,
+                width,
+                depth,
+            )
             channel_index = -1
 
             if backend.image_data_format == "channels_first":
-                input_cast = (depth, height, width)
+                input_cast = (
+                    depth,
+                    height,
+                    width,
+                )
                 channel_index = 1
             ################################
 

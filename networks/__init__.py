@@ -5,3 +5,4 @@ from drig.networks.tiny_google_net import TinyGoogLeNet
 from drig.networks.tiny_vgg_net import TinyVGGNet
 from drig.networks.multi_layer_perceptron import MultiLayerPerceptron
 from drig.networks.custom_net import CustomNet
+from drig.networks.res_net import ResNet

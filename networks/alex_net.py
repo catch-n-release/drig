@@ -12,7 +12,11 @@ class AlexNet:
     def compose(height, width, depth, classes, l2_regularization=0.0002):
         try:
 
-            input_cast = (height, width, depth)
+            input_cast = (
+                height,
+                width,
+                depth,
+            )
             channel_index = -1
             if backend.image_data_format() == "channels_first":
                 input_cast = (

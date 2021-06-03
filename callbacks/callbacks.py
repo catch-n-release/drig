@@ -47,9 +47,8 @@ class LossAccuracyTracker(BaseLogger):
                 loss_accuracy_values.append(value)
                 self.net_training_history[key] = loss_accuracy_values
             if self.json_path:
-                json_file = open(self.json_path, "w")
-                json_file.write(json.dumps(self.net_training_history))
-                json_file.close()
+                with open(self.json_path, "w") as json_file:
+                    json_file.write(json.dumps(self.net_training_history))
 
             if len(self.net_training_history["loss"]) > 1:
                 plot_training_metrics(
@@ -74,7 +73,7 @@ class AlphaScheduler:
     def polynomial_decay(self, epoch):
         try:
 
-            exp = 1.0
+            exp = 1.0  # Linear
 
             new_alpha = self.base_alpha * (
                 1 - (epoch / float(self.total_epochs)))**exp
@@ -85,12 +84,13 @@ class AlphaScheduler:
             raise e
 
 
-class ModelTracker(Callback):
+class NetworkTracker(Callback):
     def __init__(self, model_dir, epoch_interval=5, starting_epoch=0):
 
         super(Callback, self).__init__()
 
         self.model_dir = model_dir
+        os.makedirs(self.model_dir, exist_ok=True)
         self.epoch_interval = epoch_interval
         self.epoch_head = starting_epoch
 
