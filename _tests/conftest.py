@@ -45,3 +45,13 @@ def batch_norm_tensor():
         momentum=9e-1,
     )(influx)
     return batch_norm_tensor
+
+
+@pytest.fixture
+def res_net_config():
+    return {
+        0: (0, 64),
+        1: (9, 64),
+        2: (9, 128),
+        3: (9, 256),
+    }
