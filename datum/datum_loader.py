@@ -4,8 +4,10 @@ import progressbar
 from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
-from drig.utils import log, list_image_paths
+from drig.utils import log, grab_image_paths
 from drig.config import DataType
+import glob
+import csv
 
 
 class ImageDatumLoader:
@@ -28,7 +30,7 @@ class ImageDatumLoader:
         normalized: bool = True,
     ):
         try:
-            image_paths = list_image_paths(dataset_path)
+            image_paths = grab_image_paths(dataset_path)
             data = list()
             labels = list()
 
@@ -84,17 +86,19 @@ class ImageDatumLoader:
 class CSVDatumLoader:
     def __init__(
         self,
-        csv_path: str,
+        csv_dir_path: str,
         features: list = None,
         splitter: str = " ",
         skewed_filter: dict = None,
     ):
         try:
-            self.csv_path = csv_path
+
+            self.csv_file_path = glob.glob(f"{csv_dir_path}/*.csv")[0]
             self.features = features
+            self.splitter = splitter
             self.dataframe = pd.read_csv(
-                self.csv_path,
-                sep=splitter,
+                self.csv_file_path,
+                sep=self.splitter,
                 header=None,
                 names=self.features,
             )
@@ -169,24 +173,29 @@ class CSVDatumLoader:
         try:
             data = list()
             classes = list()
-            class_column_index = -1 if class_column_last else 1
-            for row in open(
-                    self.csv_path,
+            class_column_index = -1 if class_column_last else 0
+            with open(
+                    self.csv_file_path,
                     mode="r",
-            ):
-                classes.append(row[class_column_index])
-                pels = row[:-1] if class_column_last else row[1:]
-                image_pels = np.array(
-                    [int(pel) for pel in pels],
-                    dtype="uint8",
+            ) as csv_file:
+                csv_data = csv.reader(
+                    csv_file,
+                    delimiter=self.splitter,
                 )
-                image = image_pels.reshape(image_cast)
-                data.append(image)
+                for row in csv_data:
+                    classes.append(row[class_column_index])
+                    pels = row[:-1] if class_column_last else row[1:]
+                    image_pels = np.array(
+                        [int(pel) for pel in pels],
+                        dtype="uint8",
+                    )
+                    image = image_pels.reshape(image_cast)
+                    data.append(image)
             if encode_classes:
                 classes = LabelEncoder().fit_transform(classes)
             return (
                 np.array(data, dtype=DataType.FLOAT32),
-                np.array(classes, dtype=DataType.UINT8),
+                np.array(classes, dtype=DataType.INT),
             )
 
         except Exception as e:
