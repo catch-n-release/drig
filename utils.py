@@ -568,7 +568,7 @@ def grab_image_class_names(
         ])
 
         if encode_classes:
-            encoded_class_names = encode_classes(class_names)
+            encoded_class_names = encode_class_names(class_names)
             return (
                 class_names,
                 encoded_class_names,
