@@ -255,10 +255,9 @@ class CIFAR10Config:
     CLASSES: int = 10
 
     # IMAGE CAST
-
     IMAGE_HEIGHT: int = 32
     IMAGE_WIDTH: int = 32
-    IMAGE_DEPTH: int = 3
+    IMAGE_DEPTH: int = 1
 
     # TRAINING CAST
     TEST_SIZE: float = 0.25
@@ -266,13 +265,15 @@ class CIFAR10Config:
     BATCH_SIZE: int = 64
     L2_REGULATION: float = 1e-4
     EPOCHS: int = 100
+    STARTING_EPOCH = 0
+
+    # RESENT CAST
     RESNET_CONFIG: Dict[int, tuple] = field(default_factory=lambda: ({
         0: (0, 64),
         1: (9, 64),
         2: (9, 128),
         3: (9, 256),
     }))
-    STARTING_EPOCH = 0
 
     # UPSHOTS CAST
     RESNET_EFFLUX_PATH: str = os.path.abspath(
@@ -300,3 +301,34 @@ class CIFAR10Config:
         RESNET_EFFLUX_PATH,
         f"resnet56_cifar10_{BATCH_SIZE}_{INIT_ALPHA}_decay.json",
     )
+
+
+@dataclass(frozen=True)
+class KaggleAZConfig:
+    CSV_DIR_PATH: str = os.path.abspath(
+        os.path.join(
+            os.path.pardir,
+            "datasets/kag_AZ",
+        ))
+    CLASSES: int = 26
+
+    # TRAINIG CAST
+    TEST_SIZE: int = 0.20
+    INIT_ALPHA: float = 1e-1
+    BATCH_SIZE: int = 16
+    L2_REGULATION: float = 5e-4
+    EPOCHS: int = 50
+    STARTING_EPOCH = 0
+
+    # IMAGE CAST
+    IMAGE_HEIGHT: int = 32
+    IMAGE_WIDTH: int = 32
+    IMAGE_DEPTH: int = 3
+
+    # RESENT CAST
+    RESNET_CONFIG: Dict[int, tuple] = field(default_factory=lambda: ({
+        0: (0, 64),
+        1: (3, 64),
+        2: (3, 128),
+        3: (3, 256),
+    }))
