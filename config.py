@@ -65,11 +65,13 @@ class Trigger:
 
 @dataclass(frozen=True)
 class ImageCast:
+    RGB_28x28: tuple = (28, 28, 3)
     RGB_32x32: tuple = (32, 32, 3)
     RGB_64x64: tuple = (64, 64, 3)
     RGB_224x224: tuple = (224, 224, 3)
     RGB_227x227: tuple = (227, 227, 3)
     RGB_256x256: tuple = (256, 256, 3)
+    GRAY_28x28: tuple = (28, 28, 1)
     GRAY_32x32: tuple = (32, 32, 1)
     GRAY_64x64: tuple = (64, 64, 1)
     GRAY_224x224: tuple = (224, 224, 1)
@@ -108,3 +110,4 @@ class Metrics:
 class DataType:
     FLOAT32: str = "float32"
     UINT8: str = "uint8"
+    INT: str = "int"
