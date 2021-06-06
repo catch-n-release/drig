@@ -18,7 +18,7 @@ class FeatureCondenser:
             self.data = self.datum.create_dataset(group_name,
                                                   shape,
                                                   dtype="float")
-            self.labels = self.datum.create_dataset("labels", (shape[0], ),
+            self.labels = self.datum.create_dataset("classes", (shape[0], ),
                                                     dtype="int")
         except Exception as e:
             raise e

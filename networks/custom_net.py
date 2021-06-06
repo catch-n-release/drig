@@ -17,11 +17,19 @@ class CustomNet:
             regressor: bool = False,
     ):
         try:
-            input_cast = (height, width, depth)
+            input_cast = (
+                height,
+                width,
+                depth,
+            )
             channel_index = -1
 
             if backend.image_data_format() == "channels_first":
-                input_cast = (depth, height, width)
+                input_cast = (
+                    depth,
+                    height,
+                    width,
+                )
                 channel_index = 1
 
             influx = Input(shape=input_cast)

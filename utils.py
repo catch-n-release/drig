@@ -19,13 +19,14 @@ from drig.config import Error, ImageFontPath
 import json
 import glob
 from sklearn.metrics import multilabel_confusion_matrix
+from sklearn.preprocessing import LabelEncoder
 import plotly.figure_factory as ff
 
 
 def display_image(
     image_path: str = None,
     image: np.ndarray = None,
-    image_resize_ratio: int = None,
+    resize_ratio: int = None,
 ):
     try:
 
@@ -33,10 +34,10 @@ def display_image(
             image = cv2.imread(image_path)
             if type(image) != np.ndarray:
                 raise OSError(f"{Error.IMAGE_PATH_ERROR} : {image_path}")
-        if image_resize_ratio:
+        if resize_ratio:
             image = imutils.resize(
                 image,
-                width=image.shape[1] * image_resize_ratio,
+                width=image.shape[1] * resize_ratio,
             )
         return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     except Exception as e:
@@ -57,7 +58,7 @@ def plot_training_metrics(
         if json_path:
             json_file = open(json_path, mode="r")
             model_training_history = json.load(json_file)
-        elif epochs and model_training_history:
+        elif epochs is not None and model_training_history:
             pass
         else:
             raise Exception(Error.TRAINING_METRICS_PLOT_ERROR)
@@ -103,7 +104,7 @@ def matplotlib_plot(
         plt.plot(x_axis, y_validation_loss, label="Validation Loss")
         plt.plot(x_axis, y_training_accuracy, label="Training Accuracy")
         plt.plot(x_axis, y_validation_accuracy, label="Validation Accuracy")
-        plt.title("Training/Validation Loss & Accuracy")
+        plt.title(f"Training/Validation Loss & Accuracy : EPOCH {len(x_axis)}")
         plt.xlabel("EPOCH #")
         plt.ylabel("LOSS/ACCURACY")
         plt.legend()
@@ -124,7 +125,7 @@ def display_prediction(
     font_scale: float = 0.5,
     text_color: tuple = (0, 255, 0),
     text_thickness: int = 1,
-    image_resize_ratio: int = None,
+    resize_ratio: int = None,
 ):
     try:
         if image_path:
@@ -133,10 +134,10 @@ def display_prediction(
             pass
         else:
             raise Exception(Error.NO_IMAGE_OR_PATH_ERROR)
-        if image_resize_ratio:
+        if resize_ratio:
             image = imutils.resize(
                 image,
-                width=image.shape[1] * image_resize_ratio,
+                width=image.shape[1] * resize_ratio,
             )
 
         return display_image(image=cv2.putText(
@@ -152,7 +153,7 @@ def display_prediction(
         raise e
 
 
-def ranked_accuracies(
+def grab_ranked_accuracies(
     predictions: np.ndarray,
     labels: list,
 ):
@@ -188,7 +189,7 @@ def visualize_network(
 
         color_map = defaultdict(dict)
         color_map[Conv2D]['fill'] = '#CA6F1E'
-        color_map[Activation]['fill'] = "#815e94"
+        color_map[Activation]['fill'] = "#662851"
         color_map[Dropout]['fill'] = '#212F3D'
         color_map[MaxPooling2D]['fill'] = '#006fC1'
         color_map[Dense]['fill'] = '#145A32'
@@ -292,7 +293,7 @@ def plot(
         fig.update_layout(
             autosize=False,
             plot_bgcolor="#d9d9d9",
-            title="Training/Validation Loss & Accuracy",
+            title=f"Training/Validation Loss & Accuracy : EPOCH {len(x_axis)}",
             width=1000,
             height=600,
             xaxis_title="EPOCH #",
@@ -368,7 +369,7 @@ def compose_image_collages(
         raise e
 
 
-def image_cast(image_path: str):
+def grab_image_cast(image_path: str):
     try:
         image = cv2.imread(image_path)
         if type(image) != np.ndarray:
@@ -378,7 +379,7 @@ def image_cast(image_path: str):
         raise e
 
 
-def image_class(
+def grab_image_class(
     image_path: str,
     class_index: int,
 ):
@@ -390,7 +391,7 @@ def image_class(
         raise e
 
 
-def confusion_mesh(
+def grab_confusion_mesh(
     tenets: np.ndarray,
     predictions: np.ndarray,
     encoded_classes: np.ndarray = None,
@@ -469,7 +470,7 @@ def plot_confusion_mesh(
         raise e
 
 
-def list_image_paths(dataset_path: str = None):
+def grab_image_paths(dataset_path: str = None):
     try:
         all_image_paths = list(imutils.paths.list_images(dataset_path))
         if not os.path.exists(dataset_path):
@@ -481,7 +482,7 @@ def list_image_paths(dataset_path: str = None):
         raise e
 
 
-def random_image(
+def grab_random_image(
     dataset_path: str = None,
     image_paths: list = None,
     class_index: int = None,
@@ -489,25 +490,27 @@ def random_image(
 ):
     try:
         if dataset_path:
-            all_image_paths = list_image_paths(dataset_path)
+            all_image_paths = grab_image_paths(dataset_path)
         elif image_paths:
             all_image_paths = image_paths
         random_image_path = np.random.choice(all_image_paths)
         image = read_image(random_image_path)
         upshots = (image, )
-        if return_image_path:
-            upshots = (
-                *upshots,
-                random_image_path,
-            )
+
         if class_index:
-            class_name = image_class(
+            class_name = grab_image_class(
                 random_image_path,
                 class_index,
             )
             upshots = (
                 *upshots,
                 class_name,
+            )
+
+        if return_image_path:
+            upshots = (
+                *upshots,
+                random_image_path,
             )
 
         return upshots
@@ -540,5 +543,47 @@ def preprocess_image(
         if for_prediction:
             image = np.expand_dims(image, axis=0)
         return image
+    except Exception as e:
+        raise e
+
+
+def grab_image_class_names(
+    dataset_path: str = None,
+    image_paths: list = None,
+    class_index: int = -3,
+    encode_classes: bool = False,
+):
+    try:
+        if dataset_path:
+            image_paths = grab_image_paths(dataset_path)
+        elif image_paths:
+            pass
+        else:
+            raise Exception(Error.NO_DATASET_OR_IMAGE_PATHS_ERROR)
+        class_names = np.unique([
+            grab_image_class(
+                image_path,
+                class_index,
+            ) for image_path in image_paths
+        ])
+
+        if encode_classes:
+            encoded_class_names = encode_class_names(class_names)
+            return (
+                class_names,
+                encoded_class_names,
+            )
+        return class_names
+
+    except Exception as e:
+        raise e
+
+
+def encode_class_names(class_names: np.ndarray):
+    try:
+        if class_names.size:
+            encode_class_names = LabelEncoder().fit_transform(class_names)
+            return encode_class_names
+        raise Exception(Error.INVALID_PARAM_ERROR)
     except Exception as e:
         raise e

@@ -1,10 +1,13 @@
 import numpy as np
 import cv2
 import progressbar
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
-from drig.utils import log, list_image_paths
+from drig.utils import log, grab_image_paths
+from drig.config import DataType
+import glob
+import csv
 
 
 class ImageDatumLoader:
@@ -27,7 +30,7 @@ class ImageDatumLoader:
         normalized: bool = True,
     ):
         try:
-            image_paths = list_image_paths(dataset_path)
+            image_paths = grab_image_paths(dataset_path)
             data = list()
             labels = list()
 
@@ -65,8 +68,10 @@ class ImageDatumLoader:
             labels = np.array(labels)
             log.info(f"PROCESSED {i+1}/{len(image_paths)} IMAGES.")
             if input_cast:
-                flattened_data = data.reshape(data.shape[0],
-                                              np.prod(np.array(input_cast)))
+                flattened_data = data.reshape(
+                    data.shape[0],
+                    np.prod(np.array(input_cast)),
+                )
                 log.info(
                     f"MEMORY SIZE OCCUPIED: {flattened_data.nbytes/(1024*1000.0)} MB"
                 )
@@ -81,17 +86,19 @@ class ImageDatumLoader:
 class CSVDatumLoader:
     def __init__(
         self,
-        csv_path: str,
+        csv_dir_path: str,
         features: list = None,
         splitter: str = " ",
         skewed_filter: dict = None,
     ):
         try:
-            self.csv_path = csv_path
+
+            self.csv_file_path = glob.glob(f"{csv_dir_path}/*.csv")[0]
             self.features = features
+            self.splitter = splitter
             self.dataframe = pd.read_csv(
-                self.csv_path,
-                sep=splitter,
+                self.csv_file_path,
+                sep=self.splitter,
                 header=None,
                 names=self.features,
             )
@@ -139,11 +146,57 @@ class CSVDatumLoader:
                 else:
                     train_x_cat = np.hstack(
                         [train_x_cat, train_encoded_feature])
-                    test_x_cat = np.hstack([test_x_cat, test_encoded_feature])
+                    test_x_cat = np.hstack([
+                        test_x_cat,
+                        test_encoded_feature,
+                    ])
 
-            train_x = np.hstack([train_x_cat, train_x_cont])
-            test_x = np.hstack([test_x_cat, test_x_cont])
+            train_x = np.hstack([
+                train_x_cat,
+                train_x_cont,
+            ])
+            test_x = np.hstack([
+                test_x_cat,
+                test_x_cont,
+            ])
 
             return train_x, test_x
+        except Exception as e:
+            raise e
+
+    def load_image_csv(
+        self,
+        image_cast: tuple,
+        class_column_last: bool = True,
+        encode_classes: bool = False,
+    ):
+        try:
+            data = list()
+            classes = list()
+            class_column_index = -1 if class_column_last else 0
+            with open(
+                    self.csv_file_path,
+                    mode="r",
+            ) as csv_file:
+                csv_data = csv.reader(
+                    csv_file,
+                    delimiter=self.splitter,
+                )
+                for row in csv_data:
+                    classes.append(row[class_column_index])
+                    pels = row[:-1] if class_column_last else row[1:]
+                    image_pels = np.array(
+                        [int(pel) for pel in pels],
+                        dtype="uint8",
+                    )
+                    image = image_pels.reshape(image_cast)
+                    data.append(image)
+            if encode_classes:
+                classes = LabelEncoder().fit_transform(classes)
+            return (
+                np.array(data, dtype=DataType.FLOAT32),
+                np.array(classes, dtype=DataType.INT),
+            )
+
         except Exception as e:
             raise e

@@ -16,7 +16,7 @@ class FeatureExtractor:
         class_index: int,
         network,
         image_datum_path: str = None,
-        net_input_dim: tuple = None,
+        net_input_cast: tuple = None,
         batch_size: int = 64,
         buffer_size: int = 1600,
         shuffle: bool = True,
@@ -31,7 +31,7 @@ class FeatureExtractor:
             self.batch_size = batch_size
             self.buffer_size = buffer_size
             self.net = network
-            self.net_input_dim = net_input_dim
+            self.net_input_cast = net_input_cast
             self.image_paths = list(paths.list_images(self.image_datum_path)
                                     ) if self.image_datum_path else image_paths
 
@@ -43,7 +43,7 @@ class FeatureExtractor:
             self.feature_size = FeatureExtractor.unit_image_feature(
                 self.net,
                 np.random.choice(self.image_paths),
-                self.net_input_dim,
+                self.net_input_cast,
                 self.preprocessor,
                 self.image_net,
             ).shape[1]
@@ -111,7 +111,7 @@ class FeatureExtractor:
                 for image_path in batch_image_paths:
                     image_for_prediction = FeatureExtractor.preprocess_image(
                         image_path,
-                        self.net_input_dim,
+                        self.net_input_cast,
                         self.preprocessor,
                         self.image_net,
                     )
@@ -134,12 +134,12 @@ class FeatureExtractor:
     @staticmethod
     def preprocess_image(
         image_path,
-        net_input_dim: tuple = None,
+        net_input_cast: tuple = None,
         preprocessor: object = None,
         image_net: bool = False,
     ):
         try:
-            image = load_img(image_path, target_size=net_input_dim)
+            image = load_img(image_path, target_size=net_input_cast)
             image = img_to_array(image)
             image = np.expand_dims(image, axis=0)
             if preprocessor:
@@ -154,13 +154,13 @@ class FeatureExtractor:
     def unit_image_feature(
         net,
         image_path: str,
-        net_input_dim: tuple = None,
+        net_input_cast: tuple = None,
         preprocessor: object = None,
         image_net: bool = False,
     ):
         try:
             image_for_prediction = FeatureExtractor.preprocess_image(
-                image_path, net_input_dim, preprocessor, image_net)
+                image_path, net_input_cast, preprocessor, image_net)
             raw_feature_vector = net.predict(image_for_prediction)
             feature_vector_size = np.prod(raw_feature_vector.shape[1:])
             feature_vector = raw_feature_vector.reshape(
