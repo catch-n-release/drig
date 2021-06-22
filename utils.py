@@ -2,11 +2,8 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from keras.layers.convolutional import Conv2D, MaxPooling2D, AveragePooling2D
-from keras.layers.core import Activation, Flatten, Dense, Dropout
-from keras.layers.normalization import BatchNormalization
-from keras.layers import Concatenate
-from keras.utils import plot_model
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Activation, Flatten, Dense, Dropout, BatchNormalization, Concatenate
+from tensorflow.keras.utils import plot_model
 from collections import defaultdict
 import visualkeras
 import matplotlib
@@ -126,6 +123,7 @@ def display_prediction(
     text_color: tuple = (0, 255, 0),
     text_thickness: int = 1,
     resize_ratio: int = None,
+    text: str = None,
 ):
     try:
         if image_path:
