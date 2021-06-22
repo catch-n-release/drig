@@ -123,6 +123,7 @@ def display_prediction(
     text_color: tuple = (0, 255, 0),
     text_thickness: int = 1,
     resize_ratio: int = None,
+    text: str = None,
 ):
     try:
         if image_path:
