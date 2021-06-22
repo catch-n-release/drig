@@ -3,8 +3,8 @@ import progressbar
 from drig.feature import FeatureCondenser
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from keras.applications import imagenet_utils
-from keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.applications import imagenet_utils
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from drig.utils import log
 import os
 
