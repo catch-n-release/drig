@@ -29,7 +29,9 @@ class TinyVGGNetImage:
 class Kernel:
     MESH_1x1: tuple = (1, 1)
     MESH_3x3: tuple = (3, 3)
+    MESH_4x4: tuple = (4, 4)
     MESH_5x5: tuple = (5, 5)
+    MESH_7x7: tuple = (7, 7)
     MESH_11x11: tuple = (11, 11)
 
 
@@ -61,6 +63,7 @@ class Trigger:
     RELU: str = "relu"
     SOFTMAX: str = "softmax"
     LINEAR: str = "linear"
+    SIGMOID: str = "sigmoid"
 
 
 @dataclass(frozen=True)
@@ -71,6 +74,7 @@ class ImageCast:
     RGB_224x224: tuple = (224, 224, 3)
     RGB_227x227: tuple = (227, 227, 3)
     RGB_256x256: tuple = (256, 256, 3)
+    GRAY_7x7: tuple = (7, 7, 1)
     GRAY_28x28: tuple = (28, 28, 1)
     GRAY_32x32: tuple = (32, 32, 1)
     GRAY_64x64: tuple = (64, 64, 1)
