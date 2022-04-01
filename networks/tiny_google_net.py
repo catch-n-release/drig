@@ -1,12 +1,13 @@
 from keras.models import Model
 from keras.layers.convolutional import Conv2D, MaxPooling2D, AveragePooling2D
 from keras.layers.core import Activation, Flatten, Dense, Dropout
-from keras.layers.normalization import BatchNormalization
+from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras import backend
 from keras.layers import concatenate, Input
 
 
 class TinyGoogLeNet:
+
     @staticmethod
     def convolution_slab(
         influx,
