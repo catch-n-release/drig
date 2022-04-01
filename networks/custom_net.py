@@ -1,12 +1,13 @@
 from keras.models import Input, Model
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.layers.core import Activation, Dense, Flatten, Dropout
-from keras.layers.normalization import BatchNormalization
+from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras import backend
 from drig.config import Kernel, PoolSize, Padding, Trigger
 
 
 class CustomNet:
+
     @staticmethod
     def compose(
             height: int,
