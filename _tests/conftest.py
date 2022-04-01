@@ -7,7 +7,7 @@ from drig.config import ImageCast
 import os
 import shutil
 from keras.layers import Input
-from keras.layers.normalization import BatchNormalization
+from keras.layers.normalization.batch_normalization import BatchNormalization
 
 
 @pytest.fixture
