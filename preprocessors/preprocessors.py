@@ -3,9 +3,11 @@ import imutils
 from keras.preprocessing.image import img_to_array
 from sklearn.feature_extraction.image import extract_patches_2d
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
 
 
 class ShapePreprocessor:
+
     def __init__(
         self,
         height: int,
@@ -34,6 +36,7 @@ class ShapePreprocessor:
 
 
 class UniformAspectPreprocessor():
+
     def __init__(
         self,
         height: int,
@@ -85,6 +88,7 @@ class UniformAspectPreprocessor():
 
 
 class ImageToArrayPreprocessor:
+
     def __init__(
         self,
         data_format: str = None,
@@ -107,7 +111,8 @@ class ImageToArrayPreprocessor:
             raise e
 
 
-class NormalizationPreprocessor:
+class MeanNormalizationPreprocessor:
+
     def __init__(
         self,
         mean_red: float,
@@ -138,6 +143,7 @@ class NormalizationPreprocessor:
 
 
 class WindowPreprocessor:
+
     def __init__(
         self,
         height: int,
@@ -161,6 +167,7 @@ class WindowPreprocessor:
 
 
 class OverSamplingPreprocessor:
+
     def __init__(
         self,
         height: int,
@@ -211,5 +218,26 @@ class OverSamplingPreprocessor:
             crops.extend(flipped_cropped_images)
 
             return np.array(crops)
+        except Exception as e:
+            raise e
+
+
+class NormalizationPreprocessor:
+
+    def __init__(
+            self,
+            scale: tuple = (0, 1),
+            to_float=True,
+    ):
+        try:
+            self.to_float = to_float
+            self.normalizer = MinMaxScaler(feature_range=scale)
+        except Exception as e:
+            raise e
+
+    def preprocess(self, image: np.ndarray):
+        try:
+            image = image.astype("float32") if self.to_float else image
+            return self.normalizer.fit_transform(image)
         except Exception as e:
             raise e
