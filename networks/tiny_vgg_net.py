@@ -1,12 +1,13 @@
 from keras.models import Sequential
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.layers.core import Activation, Flatten, Dense, Dropout
-from keras.layers.normalization import BatchNormalization
+from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras import backend
 from drig.config import Kernel, Trigger, PoolSize, Padding
 
 
 class TinyVGGNet:
+
     @staticmethod
     def compose(
         height,
