@@ -1,13 +1,14 @@
 from keras.models import Sequential
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.layers.core import Activation, Flatten, Dense, Dropout
-from keras.layers.normalization import BatchNormalization
+from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras import backend
 from keras.regularizers import l2
 from drig.config import Kernel, PoolSize, Stride, Padding
 
 
 class AlexNet:
+
     @staticmethod
     def compose(height, width, depth, classes, l2_regularization=0.0002):
         try:
