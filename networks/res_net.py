@@ -2,13 +2,14 @@ from keras.regularizers import l2
 from keras import backend
 from keras.models import Model
 from keras.layers import Input, add
-from keras.layers.normalization import BatchNormalization
+from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras.layers.core import Activation, Flatten, Dense
 from keras.layers.convolutional import Conv2D, AveragePooling2D
 from drig.config import Kernel, Padding, PoolSize, Trigger, Stride
 
 
 class ResNet:
+
     @staticmethod
     def residual_slab(
         influx: object,
